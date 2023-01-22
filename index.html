@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex</title>
+
+    <link rel="icon" type="image/x-icon" href="./img/favicon.png">
+    <link rel="stylesheet" href="./styles/style.css">
+    <link rel="stylesheet" href="./styles/fonts.css">
+
+    <script src="./script.js"></script>
+    <script src="./template.js"></script>
+
+</head>
+
+<body onload="getPokemon()">
+    <!-- ========== Navigation ========== -->
+    <nav id="navbar">
+        <span>Pokédex</span>
+        <div>
+            <select name="search type" id="search-type" class="navbar-search-type navbar-search-actions">
+                <option value="pokename">Name</option>
+                <option value="type">Type</option>
+                <option value="evolution">Entwicklungsstufen</option>
+                <option value="attack">Attacke</option>
+            </select>
+            <input type="text" placeholder="Suchen..." class="navbar-search-type">
+            <button class="navbar-search-type navbar-search-actions">Suchen</button>
+        </div>
+        <div style="width: 77px;"></div>
+    </nav>
+
+    <div id="main"></div>
+
+    <footer>
+        <span>Impressum</span>
+    </footer>
+    
+</body>
+</html>

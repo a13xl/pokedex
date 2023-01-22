@@ -1,0 +1,116 @@
+body {
+    height: 100vh;
+    margin: 0;
+    padding-top: 45px;
+    font-family: 'Open Sans', sans-serif;
+    background-image: url(../img/backgrounds/background.png);
+    background-size: cover;
+    object-fit: cover;
+}
+
+/* ========== NAVIGATION BAR ========== */
+#navbar {
+    position: fixed;
+    top: 0;
+    width: 100vw;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #212529;
+    color: white;
+}
+
+#navbar span {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.navbar-search-type {
+    height: 20px;
+    max-width: 140px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.navbar-search-actions {
+    height: 23px;
+    background-color: #ffffff;
+    color: #000000;
+    cursor: pointer;
+}
+
+.navbar-search-actions:hover {
+    background-color: #f1f1f1!important;
+}
+
+/* ========== POKEDEX STARTPAGE ========== */
+#main {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.pokedex-type { /* FULL: height: 730px; width: 345px; */
+    height: 270px;
+    width: 160px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    background-size: 300px;
+}
+
+div:has( > .pokemon-name) {
+    height: 40px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pokemon-name {
+    margin-left: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.pokemon-id {
+    margin-right: 10px;
+    font-weight: bold;
+    opacity: 0.5;
+}
+
+.pokemon-img {
+    height: 180px;
+}
+
+.pokemon-type {
+    height: 40px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.pokemon-type-icon {
+    height: 40px;
+    width: 40px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
