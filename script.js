@@ -1,11 +1,18 @@
 let currentPokemon; // Array with Pokemon infos
 let currentName;    // Pokemon Name
 let currentDescription; // Pokemon description in german
+let currentCount = 1;
+let newCount = 30;
 
 async function getPokemon() {
-    for(x=1; x <= 151; x++) {
+    for(x=currentCount; x <= newCount; x++) {
         loadArea(x);
         await loadPokemon(x);
+        currentCount = newCount;
+    }
+
+    if(currentCount < 151) {
+        loadShowMoreBtn();
     }
 }
 
@@ -66,30 +73,33 @@ function renderPokemon() {
 
 function pokemonType() {
     let types = currentPokemon['types'];
+    let typeColor;
 
     for(i=0; i<types.length ;i++) {
-        let type = types[i]['type']['name'];
-        let typeColor = getTypeColor(type);
-
-        document.getElementById('pokemon-type-' + currentPokemon['id']).innerHTML += loadTypeIcon(type, i);
-        let typeIcon = document.getElementById('pokemon-type-icon-' + currentPokemon['id'] + '-' + i);
-
-        typeIcon.style.backgroundColor = typeColor;
-        typeIcon.style.boxShadow = `0 0 20px ${typeColor}`;
+        pokemonTypeTemplate(types, i, typeColor);
     }
-    document.getElementById('pokedex-type-' + currentPokemon['id']).style.backgroundImage = `url(./img/backgrounds/background_${types[0]['type']['name']}.png)`;
+    typeColor = getTypeColorIcon(types[0]['type']['name']);
+    document.getElementById('pokedex-card-bg-' + currentPokemon['id']).style.background = typeColor[0];
 }
 
-function getTypeColor(type) {
-    switch(type) {
-        case 'fire':
-            return '#ff331a'
-            break;
-        case 'grass':
-            return '#62bc5a'
-            break;
-        case 'poison':
-            return '#9553cd'
-            break;
+function loadShowMoreBtn() {
+
+}
+
+function showSameType(type) {
+    // Alle vom gleichen Typ anzeigen
+}
+
+// ========== DARK / LIGHT MODE ==========
+function changeTheme(theme) {
+    let navbar = document.getElementById('navbar');
+    let body = document.getElementById('body');
+    let themeTxt = document.getElementById('siteTheme');
+    let footer = document.getElementById('footer');
+
+    if(theme == 'dark'){
+        changeThemeToDark(navbar, body, themeTxt, footer);
+    } else {
+        changeThemeToLight(navbar, body, themeTxt, footer);
     }
 }

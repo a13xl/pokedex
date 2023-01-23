@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokédex</title>
 
+    <script id="Cookiebot" src="https://consent.cookiebot.com/uc.js" data-cbid="417de3f2-6372-46e8-bf94-5023e37b0a52" data-blockingmode="auto" type="text/javascript"></script>
+
     <link rel="icon" type="image/x-icon" href="./img/favicon.png">
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./styles/fonts.css">
@@ -15,27 +17,28 @@
 
 </head>
 
-<body onload="getPokemon()">
+<body id="body" onload="getPokemon()">
     <!-- ========== Navigation ========== -->
     <nav id="navbar">
-        <span>Pokédex</span>
+        <span><b>Pokédex</b></span>
         <div>
             <select name="search type" id="search-type" class="navbar-search-type navbar-search-actions">
                 <option value="pokename">Name</option>
                 <option value="type">Type</option>
                 <option value="evolution">Entwicklungsstufen</option>
-                <option value="attack">Attacke</option>
             </select>
             <input type="text" placeholder="Suchen..." class="navbar-search-type">
             <button class="navbar-search-type navbar-search-actions">Suchen</button>
         </div>
-        <div style="width: 77px;"></div>
+        <div id="siteTheme" style="cursor: pointer;"><span onclick="changeTheme('dark')">dark mode</span></div>
     </nav>
 
     <div id="main"></div>
 
-    <footer>
+    <footer id="footer">
         <span>Impressum</span>
+        <span>Datenschutzerklärung</span>
+        <a href="https://github.com/a13xl" target="new Tab"><img src="./img/icons/github_white.png" alt="github icon" title="Github"></a>
     </footer>
     
 </body>
