@@ -1,13 +1,17 @@
 let allPokemons = [];
 let searchedPokemon = [];
 let currentPokemon; // Array with Pokemon infos
+let currentPokemons; // current showed Pokemons
+let currentCount = 1;
+let newCount = 30;
+let maxCount = 151;
 
 async function getPokemons() {
-    await getCurrentPokemon();
+    await getCurrentPokemons();
 }
 
-async function getCurrentPokemon() {
-    for(x=1; x <= 151; x++) {
+async function getCurrentPokemons() {
+    for(x=currentCount; x <= newCount; x++) {
         loadArea(x);
         await loadPokemon(x);
         await loadSpecies();
@@ -15,11 +19,14 @@ async function getCurrentPokemon() {
         pokemonType();
         allPokemons.push(currentPokemon);
     }
+    if(newCount<maxCount){
+        document.getElementById('pokedexContainer').innerHTML += `<button>Mehr laden</button>`;
+    }
 }
 
 // load Pokemons in "Cards". need template.js
 function loadArea(pokemonNr) {
-    document.getElementById('main').innerHTML += loadPokedexEelement(pokemonNr);
+    document.getElementById('pokemonContainer').innerHTML += loadPokedexEelement(pokemonNr);
 }
 
 // get Pokemon infos
@@ -80,10 +87,6 @@ function pokemonType() {
     document.getElementById('pokedex-card-bg-' + currentPokemon['id']).style.background = typeColor[0];
 }
 
-function showSameType(type) {
-    // Alle vom gleichen Typ anzeigen
-}
-
 // ========== DARK / LIGHT MODE ==========
 function changeTheme(theme) {
     let navbar = document.getElementById('navbar');
@@ -99,17 +102,31 @@ function changeTheme(theme) {
 }
 
 // ========== SEARCH POKEMON ==========
+/*
+function showSameType(type) {
+    // Alle vom gleichen Typ anzeigen
+}
+
 function searchPokemon() {
     let search = document.getElementById('searchInput').value;
     search = search.toLowerCase().trim();
-    searchedPokemon = allPokemons;
+    searchedPokemon = currentPokemons;
     document.getElementById('main').innerHTML = ``;
 
     if (search.length > 0) {
-        
         console.log(search);
-        searchedPokemon = allPokemons.filter(p => includesSearch(p, search));
+        debugger;
+        var index = -1;
+        searchedPokemon = allPokemons.find(function(item, i){
+            if(item.name == search){
+                index = i;
+                return i;
+            }
+        });
+        //searchedPokemon = allPokemons.indexOf(search);  //filter(item => item.indexOf(search) > -1);
 
+        console.log(index, searchedPokemon);
     }
     //renderSearch();
 }
+*/

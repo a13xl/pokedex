@@ -63,7 +63,32 @@ body {
 }
 
 /* ========== POKEDEX STARTPAGE ========== */
-#main {
+#pokedexContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#pokedexContainer button {
+    height: 50px;
+    width: 150px;
+    margin-top: 40px;
+    font-size: 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(to bottom, #505050,#a1a1a1,#505050);
+    box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+    cursor: pointer;
+}
+
+#pokedexContainer button:hover {
+    filter: saturate(200%);
+    transform: scale(1.1);
+}
+
+#pokemonContainer {
     margin-top: 20px;
     display: flex;
     justify-content: center;
