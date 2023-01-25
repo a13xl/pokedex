@@ -1,27 +1,78 @@
 let allPokemons = [];
 let searchedPokemon = [];
 let currentPokemon; // Array with Pokemon infos
-let currentPokemons; // current showed Pokemons
+let currentPokemons = []; // current showed Pokemons
 let currentCount = 1;
 let newCount = 30;
 let maxCount = 151;
 
 async function getPokemons() {
+    load();
     await getCurrentPokemons();
 }
 
 async function getCurrentPokemons() {
     for(x=currentCount; x <= newCount; x++) {
         loadArea(x);
-        await loadPokemon(x);
-        await loadSpecies();
+        await loadPokemon(x)
+        currentPokemons.push(currentPokemon);
         renderPokemon();
-        pokemonType();
+    }
+    loadMorePokemonBtn();
+    currentCount = newCount;
+
+    if(allPokemons.length < maxCount){
+        loadBackgroundPokemons();
+    }
+}
+
+// load Pokemons from API if not loaded in Array allPokemons
+async function loadPokemon(x){
+    if(allPokemons.length < maxCount){
+        await getCurrentPokemonInfo(x);
+        allPokemons.push(currentPokemon);
+    } else {
+        let y = x-1;
+        currentPokemon = allPokemons[y];
+    }
+}
+
+// load all Pokemons in Background
+async function loadBackgroundPokemons() {
+    for(j=(currentCount+1); j <= maxCount; j++) {
+        await getCurrentPokemonInfo(j);
         allPokemons.push(currentPokemon);
     }
-    if(newCount<maxCount){
-        document.getElementById('pokedexContainer').innerHTML += `<button>Mehr laden</button>`;
+
+}
+
+// get German Name and Description
+async function getCurrentPokemonInfo(x) {
+    await loadPokemonArray(x);
+    let currentSpecies = await loadSpecies();
+    loadName(currentSpecies);
+    loadDescription(currentSpecies);
+    pokemonType();    
+} 
+
+function loadMorePokemonBtn() {
+    if(newCount < maxCount){
+        document.getElementById('pokedexContainerBtn').innerHTML = `<button onclick="loadMorePokemons()">Mehr laden</button>`;
     }
+}
+
+function loadMorePokemons() {
+    let n = newCount;
+    n = n + 30
+
+    if(n < maxCount){
+        newCount = n;
+        loadMorePokemonBtn();
+    } else {
+        newCount = maxCount;
+        document.getElementById('pokedexContainerBtn').innerHTML = '';
+    }
+    
 }
 
 // load Pokemons in "Cards". need template.js
@@ -30,7 +81,7 @@ function loadArea(pokemonNr) {
 }
 
 // get Pokemon infos
-async function loadPokemon(pokemonNr){
+async function loadPokemonArray(pokemonNr){
     let url = `https://pokeapi.co/api/v2/pokemon/${pokemonNr}`;
     let response = await fetch(url);
     currentPokemon = await response.json();
@@ -42,8 +93,7 @@ async function loadSpecies() {
     let response = await fetch(url);
     let currentSpecies = await response.json();
 
-    loadName(currentSpecies);
-    loadDescription(currentSpecies);
+    return currentSpecies;
 }
 
 function loadName(currentSpecies) {
@@ -55,7 +105,6 @@ function loadName(currentSpecies) {
             break;
         }
     }
-
 }
 
 function loadDescription(currentSpecies) {
@@ -73,18 +122,48 @@ function renderPokemon() {
     document.getElementById('pokemon-name-' + nr).innerHTML = currentPokemon['name'];
     document.getElementById('pokemon-id-' + nr).innerHTML = `#${nr}`
     document.getElementById('pokemon-img-' + nr).src = currentPokemon['sprites']['other']['home']['front_default'];
-    
+    pokemonTypeRender();
 }
 
-function pokemonType() {
+function pokemonTypeRender() {
     let types = currentPokemon['types'];
     let typeColor;
 
     for(i=0; i<types.length ;i++) {
-        pokemonTypeTemplate(types, i, typeColor);
+        pokemonTypeTemplate(types, i, typeColor); // FALSCH
     }
     typeColor = getTypeColorIcon(types[0]['type']['name_en']);
     document.getElementById('pokedex-card-bg-' + currentPokemon['id']).style.background = typeColor[0];
+}
+
+function pokemonType() {
+    let types = currentPokemon['types'];
+
+    for(i=0; i<types.length ;i++) {
+        let type = types[i]['type']['name'];
+        let typeName = getTypeColorIcon(type);
+        typeName = typeName[2];
+
+        currentPokemon['types'][i]['type']['name_en'] = types[i]['type']['name'];
+        currentPokemon['types'][i]['type']['name'] = typeName;
+    }
+}
+
+// FALSCH
+function pokemonTypeTemplate(types, i, typeColor) {
+    let type = types[i]['type']['name_en'];
+    typeColor = getTypeColorIcon(type);
+/*
+    currentPokemon['types'][i]['type']['name_en'] = types[i]['type']['name'];
+    currentPokemon['types'][i]['type']['name'] = typeColor[2];
+*/
+
+    document.getElementById('pokemon-type-' + currentPokemon['id']).innerHTML += loadTypeIcon(type, i);
+    let typeIcon = document.getElementById('pokemon-type-icon-' + currentPokemon['id'] + '-' + i);
+
+    typeIcon.style.background = typeColor[0];
+    typeIcon.style.boxShadow = `0 0 20px ${typeColor[1]}`;
+    typeIcon.title = currentPokemon['types'][i]['type']['name'];
 }
 
 // ========== DARK / LIGHT MODE ==========
@@ -96,37 +175,25 @@ function changeTheme(theme) {
 
     if(theme == 'dark'){
         changeThemeToDark(navbar, body, themeTxt, footer);
+        save('dark');
     } else {
         changeThemeToLight(navbar, body, themeTxt, footer);
+        save('light');
     }
 }
 
 // ========== SEARCH POKEMON ==========
-/*
-function showSameType(type) {
-    // Alle vom gleichen Typ anzeigen
+
+// ========== LOCAL STORAGE ==========
+function save(theme) {
+    let currentThemeAsText = JSON.stringify(theme);
+    localStorage.setItem('Pokedex_Theme', currentThemeAsText);
 }
 
-function searchPokemon() {
-    let search = document.getElementById('searchInput').value;
-    search = search.toLowerCase().trim();
-    searchedPokemon = currentPokemons;
-    document.getElementById('main').innerHTML = ``;
+function load() {
+    let currentThemeAsText = localStorage.getItem('Pokedex_Theme');
 
-    if (search.length > 0) {
-        console.log(search);
-        debugger;
-        var index = -1;
-        searchedPokemon = allPokemons.find(function(item, i){
-            if(item.name == search){
-                index = i;
-                return i;
-            }
-        });
-        //searchedPokemon = allPokemons.indexOf(search);  //filter(item => item.indexOf(search) > -1);
-
-        console.log(index, searchedPokemon);
+    if(currentThemeAsText) {
+        changeTheme(JSON.parse(currentThemeAsText));
     }
-    //renderSearch();
 }
-*/
