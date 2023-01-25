@@ -17,24 +17,23 @@
 
 </head>
 
-<body id="body" onload="getPokemon()">
+<body id="body" onload="getPokemons()">
     <!-- ========== Navigation ========== -->
     <nav id="navbar">
         <span><b>Pokédex</b></span>
         <div>
-            <select name="search type" id="search-type" class="navbar-search-type navbar-search-actions">
-                <option value="pokename">Name</option>
-                <option value="type">Type</option>
-                <option value="evolution">Entwicklungsstufen</option>
-            </select>
-            <input type="text" placeholder="Suchen..." class="navbar-search-type">
-            <button class="navbar-search-type navbar-search-actions">Suchen</button>
+            <input id="searchInput" type="text" placeholder="Name/Type eingeben..." class="navbar-search-type" onkeyup="searchPokemon()">
+            <!--
+            <button class="navbar-search-type navbar-search-actions" onclick="search()">Suchen</button>
+            -->
         </div>
         <div id="siteTheme" style="cursor: pointer;"><span onclick="changeTheme('dark')">dark mode</span></div>
     </nav>
 
+    <!-- ========== All Pokemon Cards ========== -->
     <div id="main"></div>
 
+    <!-- ========== Footer with impressum and privacy policy ========== -->
     <footer id="footer">
         <span>Impressum</span>
         <span>Datenschutzerklärung</span>

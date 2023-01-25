@@ -6,6 +6,9 @@ body {
     background-image: url(../img/backgrounds/background.png);
     background-size: cover;
     object-fit: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* ========== NAVIGATION BAR ========== */
@@ -29,22 +32,34 @@ body {
 }
 
 .navbar-search-type {
-    height: 20px;
-    max-width: 140px;
+    max-width: 170px;
     border: none;
-    border-radius: 5px;
     font-size: 16px;
+}
+
+#searchInput {
+    height: 21px;
+    margin-right: -2px;
+    padding-left: 8px;
+    border-radius: 10px;
+}
+
+*:focus {
+    outline: none;
 }
 
 .navbar-search-actions {
     height: 23px;
-    background-color: #ffffff;
+    margin-left: -2px;
+    background-color: #dfdfdf;
     color: #000000;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     cursor: pointer;
 }
 
 .navbar-search-actions:hover {
-    background-color: #f1f1f1!important;
+    background-color: #b8b8b8!important;
 }
 
 /* ========== POKEDEX STARTPAGE ========== */
@@ -59,6 +74,11 @@ body {
 .pokedex-card-bg {
     border-radius: 10px;
     box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+}
+
+.pokedex-card-bg:hover {
+    filter: saturate(120%);
+    transform: scale(1.1);
 }
 
 .pokedex-type {
@@ -123,6 +143,11 @@ div:has( > .pokemon-name) {
     align-items: center;
 }
 
+.pokemon-type-icon:hover {
+    filter: saturate(200%);
+    transform: scale(1.1);
+}
+
 /* ========== FOOTER ========== */
 footer {
         margin-top: 20px;
@@ -147,3 +172,5 @@ footer a {
 footer img {
     height: 40px;
 }
+
+/* ========== OPEN POKEMON CARD ========== */

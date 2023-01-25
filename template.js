@@ -22,13 +22,15 @@ function loadTypeIcon(type, typNr) {
 function pokemonTypeTemplate(types, i, typeColor) {
     let type = types[i]['type']['name'];
     typeColor = getTypeColorIcon(type);
+    currentPokemon['types'][i]['type']['name_en'] = types[i]['type']['name'];
+    currentPokemon['types'][i]['type']['name'] = typeColor[2];
 
     document.getElementById('pokemon-type-' + currentPokemon['id']).innerHTML += loadTypeIcon(type, i);
     let typeIcon = document.getElementById('pokemon-type-icon-' + currentPokemon['id'] + '-' + i);
 
     typeIcon.style.background = typeColor[0];
     typeIcon.style.boxShadow = `0 0 20px ${typeColor[1]}`;
-    typeIcon.title = typeColor[2];
+    typeIcon.title = currentPokemon['types'][i]['type']['name'];
 }
 
 function getTypeColorIcon(type) {
