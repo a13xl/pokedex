@@ -61,9 +61,11 @@ function loadMorePokemonBtn() {
     }
 }
 
+// click on Load more Pokemons
 function loadMorePokemons() {
     let n = newCount;
     n = n + 30
+    currentCount++
 
     if(n < maxCount){
         newCount = n;
@@ -72,7 +74,7 @@ function loadMorePokemons() {
         newCount = maxCount;
         document.getElementById('pokedexContainerBtn').innerHTML = '';
     }
-    
+    getCurrentPokemons();
 }
 
 // load Pokemons in "Cards". need template.js
@@ -183,6 +185,31 @@ function changeTheme(theme) {
 }
 
 // ========== SEARCH POKEMON ==========
+
+
+// ========== BIG VIEW ==========
+function showPokemonBig(id) {
+    openBigView();
+}
+
+function openBigView() {
+    let main = document.getElementById('main');
+    document.getElementById('bigView').classList.remove('d-none');
+    main.classList.add('main-bg');
+    //main.style.position = 'relative';
+    main.style.overflow = 'hidden'
+}
+
+function closeBigView() {
+    let main = document.getElementById('main');
+    document.getElementById('bigView').classList.add('d-none');
+    main.classList.remove('main-bg');
+    main.style.overflow = ''
+}
+
+function stopClosing() {
+    event.stopPropagation();
+}
 
 // ========== LOCAL STORAGE ==========
 function save(theme) {

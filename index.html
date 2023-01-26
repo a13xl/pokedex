@@ -17,31 +17,73 @@
 
 </head>
 
+<!-- onload="getPokemons()" -->
 <body id="body" onload="getPokemons()">
-    <!-- ========== Navigation ========== -->
-    <nav id="navbar">
-        <span><b>Pokédex</b></span>
-        <div>
-            <input id="searchInput" type="text" placeholder="Name/Type eingeben..." class="navbar-search-type" onkeyup="searchPokemon()">
-            <!--
-            <button class="navbar-search-type navbar-search-actions" onclick="search()">Suchen</button>
-            -->
-        </div>
-        <div id="siteTheme" style="cursor: pointer;"><span onclick="changeTheme('dark')">dark mode</span></div>
-    </nav>
+    <!-- ========== Big View ========== class="d-none" -->
+    <div id="bigView"  onclick="closeBigView()">
+        <div class="bigView-window" onclick="stopClosing()">
+            <div class="bigView-close"><img src="./img/icons/close.png" onclick="closeBigView()"></div>
+            <div id="pokemon-big" style="padding: 35px;">
+                <div class="pokemon-big-headline">
 
-    <!-- ========== All Pokemon Cards ========== -->
-    <div id="pokedexContainer">
-        <div id="pokemonContainer"></div>
-        <div id="pokedexContainerBtn"></div>
+                    <div>
+                        <div><h1 style="margin: 0;">Glurak</h1></div>
+                        <div id="pokemon-big-type">
+                            <div class="pokemon-big-type" style="background: #c42424;"><b>Feuer</b></div>
+                            <div class="pokemon-big-type" style="background: #CE62D0;"><b>Flug</b></div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: center; font-size: 25px;"><b>#6</b></div>
+                </div>
+
+                <div class="pokemon-big-img">
+                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png" alt="" style="height: 265px;">
+                </div>
+
+            </div>
+
+            <div id="pokemon-info-container">
+                <nav class="pokemon-info-nav">
+                    <div style="color: black; border-bottom: 2px solid #3f51b5;"><b>Beschr.</b></div>
+                    <div><b>Infos</b></div>
+                    <div><b>Basiswerte</b></div>
+                    <div><b>Entwicklungen</b></div>
+                    <div><b>Attacken</b></div>
+                </nav>
+                <div style="margin: 5%;">
+                    'Wenn dieses Pokémon einen Strahl glühenden Feuers speit, leuchtet seine Schwanzspitze auf.'
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- ========== Footer with impressum and privacy policy ========== -->
-    <footer id="footer">
-        <span>Impressum</span>
-        <span>Datenschutzerklärung</span>
-        <a href="https://github.com/a13xl" target="new Tab"><img src="./img/icons/github_white.png" alt="github icon" title="Github"></a>
-    </footer>
+    <!-- ========== Navigation ========== -->
+    <div id="main">
+        <nav id="navbar">
+            <span><b>Pokédex</b></span>
+            <div>
+                <input id="searchInput" type="search" placeholder="Suchen..." class="navbar-search-type" onkeyup="searchPokemon()">
+                <!--
+                <button class="navbar-search-type navbar-search-actions" onclick="search()">Suchen</button>
+                -->
+            </div>
+            <div id="siteTheme" style="cursor: pointer;"><span onclick="changeTheme('dark')">dark mode</span></div>
+        </nav>
+
+        <!-- ========== All Pokemon Cards ========== -->
+        <div id="pokedexContainer">
+            <div id="pokemonContainer"></div>
+            <div id="pokedexContainerBtn"></div>
+        </div>
+
+        <!-- ========== Footer with impressum and privacy policy ========== -->
+        <footer id="footer">
+            <span>Impressum</span>
+            <span>Datenschutzerklärung</span>
+            <a href="https://github.com/a13xl" target="new Tab"><img src="./img/icons/github_white.png" alt="github icon" title="Github"></a>
+        </footer>
+    </div>
     
 </body>
 </html>

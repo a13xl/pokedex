@@ -1,6 +1,6 @@
 function loadPokedexEelement(pokemonNr) {
     return `
-        <div id="pokedex-card-bg-${pokemonNr}" class="pokedex-card-bg">
+        <div id="pokedex-card-bg-${pokemonNr}" class="pokedex-card-bg" onclick="showPokemonBig(${pokemonNr})">
             <div id="pokedex-type-${pokemonNr}" class="pokedex-type">
                 <div>
                     <span id="pokemon-name-${pokemonNr}" class="pokemon-name"></span>
