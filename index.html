@@ -19,40 +19,22 @@
 
 <!-- onload="getPokemons()" -->
 <body id="body" onload="getPokemons()">
-    <!-- ========== Big View ========== class="d-none" -->
-    <div id="bigView"  onclick="closeBigView()">
+    <!-- ========== Big View ========== -->
+    <div id="bigView"  onclick="closeBigView()" class="d-none">
         <div class="bigView-window" onclick="stopClosing()">
             <div class="bigView-close"><img src="./img/icons/close.png" onclick="closeBigView()"></div>
-            <div id="pokemon-big" style="padding: 35px;">
-                <div class="pokemon-big-headline">
+            <div id="pokemon-big-header" class="pokemon-big" style="background: linear-gradient(to bottom, #c42424,#f37878,#c42424);"></div>
 
-                    <div>
-                        <div><h1 style="margin: 0;">Glurak</h1></div>
-                        <div id="pokemon-big-type">
-                            <div class="pokemon-big-type" style="background: #c42424;"><b>Feuer</b></div>
-                            <div class="pokemon-big-type" style="background: #CE62D0;"><b>Flug</b></div>
-                        </div>
-                    </div>
-
-                    <div style="display: flex; align-items: center; font-size: 25px;"><b>#6</b></div>
-                </div>
-
-                <div class="pokemon-big-img">
-                    <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png" alt="" style="height: 265px;">
-                </div>
-
-            </div>
-
-            <div id="pokemon-info-container">
+            <div id="pokemon-info-main" style="background-color: white; color: black;">
                 <nav class="pokemon-info-nav">
-                    <div style="color: black; border-bottom: 2px solid #3f51b5;"><b>Beschr.</b></div>
-                    <div><b>Infos</b></div>
-                    <div><b>Basiswerte</b></div>
-                    <div><b>Entwicklungen</b></div>
-                    <div><b>Attacken</b></div>
+                    <div id="info-headline-about" style="color: black; border-bottom: 2px solid #3f51b5;"><b>Beschr.</b></div>
+                    <div id="info-headline-infos"><b>Infos</b></div>
+                    <div id="info-headline-basisStats"><b>Basiswerte</b></div>
+                    <div id="info-headline-evolution"><b>Entwicklungen</b></div>
+                    <div id="info-headline-moves"><b>Attacken</b></div>
                 </nav>
-                <div style="margin: 5%;">
-                    'Wenn dieses Pokémon einen Strahl glühenden Feuers speit, leuchtet seine Schwanzspitze auf.'
+                <div id="pokemon-info-container" style="margin: 4%;">
+                   
                 </div>
             </div>
         </div>

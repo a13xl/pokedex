@@ -113,7 +113,8 @@ function loadDescription(currentSpecies) {
     for(i=0; i < currentSpecies['flavor_text_entries'].length; i++) {
         let text = currentSpecies['flavor_text_entries'][i];
         if(text['language']['name'] == 'de'){
-            currentPokemon['description'] = text['flavor_text'];
+            //currentPokemon['description'] = text['flavor_text'];
+            currentPokemon['description'] = text['flavor_text'].replace(/\n/gi, "<br>");
             break;
         }
     }
@@ -132,7 +133,7 @@ function pokemonTypeRender() {
     let typeColor;
 
     for(i=0; i<types.length ;i++) {
-        pokemonTypeTemplate(types, i, typeColor); // FALSCH
+        pokemonTypeTemplate(types, i, typeColor);
     }
     typeColor = getTypeColorIcon(types[0]['type']['name_en']);
     document.getElementById('pokedex-card-bg-' + currentPokemon['id']).style.background = typeColor[0];
@@ -151,7 +152,6 @@ function pokemonType() {
     }
 }
 
-// FALSCH
 function pokemonTypeTemplate(types, i, typeColor) {
     let type = types[i]['type']['name_en'];
     typeColor = getTypeColorIcon(type);
@@ -189,15 +189,46 @@ function changeTheme(theme) {
 
 // ========== BIG VIEW ==========
 function showPokemonBig(id) {
+    let pokemonIndex = id - 1;
+
     openBigView();
+    renderBigCard(pokemonIndex);
+    loadBigCardHeaderBackground(pokemonIndex);
+    loadBigCardTypes(pokemonIndex);
+    loadBigCardDescription(pokemonIndex);
 }
 
 function openBigView() {
     let main = document.getElementById('main');
     document.getElementById('bigView').classList.remove('d-none');
     main.classList.add('main-bg');
+
     //main.style.position = 'relative';
-    main.style.overflow = 'hidden'
+    //main.style.overflow = 'hidden'
+}
+
+function renderBigCard(id) {
+    document.getElementById('pokemon-big-header').innerHTML = loadBigCardHeaderTemplate(id);
+}
+
+function loadBigCardHeaderBackground(id) {
+    let type = allPokemons[id]['types'][0]['type']['name_en'];
+    let backgroundColor = getTypeColorIcon(type);
+    document.getElementById('pokemon-big-header').style.background = backgroundColor[0];
+}
+
+function loadBigCardTypes(id) {
+    let types = allPokemons[id]['types'];
+
+    for(j=0; j<types.length ;j++) {
+        let type = types[j]['type']['name_en'];
+        let typeName = getTypeColorIcon(type);
+        document.getElementById('pokemon-big-type').innerHTML += loadBigCardTypesTemplate(id, j, typeName[1])
+    }
+}
+
+function loadBigCardDescription(id) {
+    document.getElementById('pokemon-info-container').innerHTML = allPokemons[id]['description'];
 }
 
 function closeBigView() {

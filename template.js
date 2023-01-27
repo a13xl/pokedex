@@ -89,3 +89,25 @@ function changeThemeToLight(navbar, body, themeTxt, footer) {
     themeTxt.innerHTML = `<span onclick="changeTheme('dark')">dark mode</span>`;
     footer.style.backgroundColor = '#212529';
 }
+
+// ========== BIG CARD ==========
+function loadBigCardHeaderTemplate(id) {
+    return `
+        <div class="pokemon-big-headline">
+            <div>
+                <div><h1 style="margin: 0;">${allPokemons[id]['name']}</h1>
+                    <div id="pokemon-big-type"></div>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; font-size: 25px;"><b>#${allPokemons[id]['id']}</b></div>
+        </div>
+
+        <div class="pokemon-big-img">
+            <img src="${allPokemons[id]['sprites']['other']['home']['front_default']}" alt="" style="height: 265px;">
+        </div>`;
+}
+
+function loadBigCardTypesTemplate(id, i, color) {
+    return `
+        <div class="pokemon-big-type" style="background: ${color};"><b>${allPokemons[id]['types'][i]['type']['name']}</b></div>`;
+}
