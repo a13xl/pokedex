@@ -3,7 +3,7 @@ let searchedPokemon = [];
 let currentPokemon; // Array with Pokemon infos
 let currentPokemons = []; // current showed Pokemons
 let currentCount = 1;
-let newCount = 30;
+let newCount = 6;
 let maxCount = 151;
 
 async function getPokemons() {
@@ -20,6 +20,8 @@ async function getCurrentPokemons() {
     }
     loadMorePokemonBtn();
     currentCount = newCount;
+
+    closeLoading();
 
     if(allPokemons.length < maxCount){
         loadBackgroundPokemons();
@@ -155,10 +157,6 @@ function pokemonType() {
 function pokemonTypeTemplate(types, i, typeColor) {
     let type = types[i]['type']['name_en'];
     typeColor = getTypeColorIcon(type);
-/*
-    currentPokemon['types'][i]['type']['name_en'] = types[i]['type']['name'];
-    currentPokemon['types'][i]['type']['name'] = typeColor[2];
-*/
 
     document.getElementById('pokemon-type-' + currentPokemon['id']).innerHTML += loadTypeIcon(type, i);
     let typeIcon = document.getElementById('pokemon-type-icon-' + currentPokemon['id'] + '-' + i);
@@ -195,7 +193,7 @@ function showPokemonBig(id) {
     renderBigCard(pokemonIndex);
     loadBigCardHeaderBackground(pokemonIndex);
     loadBigCardTypes(pokemonIndex);
-    loadBigCardDescription(pokemonIndex);
+    loadBigCardInfos(pokemonIndex);
 }
 
 function openBigView() {
@@ -204,11 +202,12 @@ function openBigView() {
     main.classList.add('main-bg');
 
     //main.style.position = 'relative';
-    //main.style.overflow = 'hidden'
+    main.style.overflow = 'hidden'
 }
 
 function renderBigCard(id) {
     document.getElementById('pokemon-big-header').innerHTML = loadBigCardHeaderTemplate(id);
+    document.getElementById('pokemon-info-main').innerHTML = loadPokemonNav(id);
 }
 
 function loadBigCardHeaderBackground(id) {
@@ -227,8 +226,31 @@ function loadBigCardTypes(id) {
     }
 }
 
-function loadBigCardDescription(id) {
-    document.getElementById('pokemon-info-container').innerHTML = allPokemons[id]['description'];
+function loadBigCardInfos(id) {
+    let infoContainer = document.getElementById('pokemon-info-container');
+    let height = allPokemons[id]['height'] / 10;
+    //height = height.toString(10);
+    height = height.toFixed(1);
+    height = height.replace(".", ",");
+    
+    let weight = allPokemons[id]['weight'] / 10;
+    //weight = weight.toString(10);
+    weight = weight.toFixed(1);
+    weight = weight.replace(".", ",");
+
+    infoContainer.innerHTML = loadBigCardInfosTemplate(id, height, weight);
+}
+
+function loadBigCardState(id) {
+    // Base State
+}
+
+function loadBigCardEvolution(id) {
+    // Entwicklungsstufen
+}
+
+function loadBigCardMoves(id) {
+    // Attacken
 }
 
 function closeBigView() {
@@ -240,6 +262,12 @@ function closeBigView() {
 
 function stopClosing() {
     event.stopPropagation();
+}
+
+// ========== LOADING ==========
+function closeLoading() {
+    document.getElementById('loading').classList.add('d-none');
+    document.getElementById('main').classList.remove('main-bg');
 }
 
 // ========== LOCAL STORAGE ==========

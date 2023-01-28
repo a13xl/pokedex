@@ -286,20 +286,35 @@ footer img {
     padding: 10px;
     display: flex;
     align-items: center;
-    font-size: 14px;
+    text-align: center;
+    font-size: 16px;
 }
 
-.pokemon-info-nav div {
+.pokemon-info-nav td {
     padding: 4.9px;
     color: #919191;
     border-bottom: 2px solid #919191;
     cursor: pointer;
 }
 
-.pokemon-info-nav div:hover {
+.pokemon-info-nav td:hover {
     background-color: #dddddd;
 }
 
-.pokemon-info-nav div:focus {
+.pokemon-info-nav td:focus {
     background-color: unset;
+}
+
+#pokemon-info-container h3 {
+    margin: 0;
+}
+
+/* ========== LOADING ========== */
+#loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    z-index: 2;
 }

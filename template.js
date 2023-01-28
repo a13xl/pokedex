@@ -111,3 +111,35 @@ function loadBigCardTypesTemplate(id, i, color) {
     return `
         <div class="pokemon-big-type" style="background: ${color};"><b>${allPokemons[id]['types'][i]['type']['name']}</b></div>`;
 }
+
+function loadPokemonNav(id) {
+    return `
+        <nav class="pokemon-info-nav">
+            <table style="width: 100%; margin-left: 2%; margin-right: 2%">
+                <tr>
+                    <td id="info-headline-about" onclick="loadBigCardInfos(${id})" style="color: black; border-bottom: 2px solid #3f51b5;"><b>Infos</b></td>
+                    <td id="info-headline-basisStats" onclick="loadBigCardState(${id})"><b>Basiswerte</b></td>
+                    <td id="info-headline-evolution" onclick="loadBigCardEvolution(${id})"><b>Entwicklungen</b></td>
+                    <td id="info-headline-moves" onclick="loadBigCardMoves(${id})"><b>Attacken</b></td>
+                </tr>
+            </table>
+        </nav>
+        <div id="pokemon-info-container" style="margin: 4%;"></div>`;
+}
+
+function loadBigCardInfosTemplate(id, height, weight) {
+    return `
+        <table style="width: 50%">
+            <tr>
+                <td>Größe:</td>
+                <td style="text-align: right;">${height} m</td>
+            </tr>
+            <tr>
+                <td>Gewicht:</td>
+                <td style="text-align: right;">${weight} kg</td>
+            </tr>
+        </table>
+        <br>
+        <h3>Beschreibung</h3>
+        <span style="font-size: 15px">${allPokemons[id]['description']}</span>`;
+}

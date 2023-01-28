@@ -19,29 +19,24 @@
 
 <!-- onload="getPokemons()" -->
 <body id="body" onload="getPokemons()">
+    <!-- ========== Loading ========== -->
+    <div id="loading">
+        <img src="./img/icons/loading.gif" alt="loading gif">
+    </div>
+
     <!-- ========== Big View ========== -->
     <div id="bigView"  onclick="closeBigView()" class="d-none">
         <div class="bigView-window" onclick="stopClosing()">
             <div class="bigView-close"><img src="./img/icons/close.png" onclick="closeBigView()"></div>
             <div id="pokemon-big-header" class="pokemon-big" style="background: linear-gradient(to bottom, #c42424,#f37878,#c42424);"></div>
 
-            <div id="pokemon-info-main" style="background-color: white; color: black;">
-                <nav class="pokemon-info-nav">
-                    <div id="info-headline-about" style="color: black; border-bottom: 2px solid #3f51b5;"><b>Beschr.</b></div>
-                    <div id="info-headline-infos"><b>Infos</b></div>
-                    <div id="info-headline-basisStats"><b>Basiswerte</b></div>
-                    <div id="info-headline-evolution"><b>Entwicklungen</b></div>
-                    <div id="info-headline-moves"><b>Attacken</b></div>
-                </nav>
-                <div id="pokemon-info-container" style="margin: 4%;">
-                   
-                </div>
-            </div>
+            <div id="pokemon-info-main" style="background-color: white; color: black;"></div>
+
         </div>
     </div>
 
     <!-- ========== Navigation ========== -->
-    <div id="main">
+    <div id="main" class="main-bg">
         <nav id="navbar">
             <span><b>Pokédex</b></span>
             <div>
