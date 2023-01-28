@@ -76,18 +76,22 @@ function getTypeColorIcon(type) {
 }
 
 // ========== DARK / LIGHT MODE ==========
-function changeThemeToDark(navbar, body, themeTxt, footer) {
+function changeThemeToDark(navbar, body, themeTxt, footer, infoCard) {
     navbar.style.backgroundColor = '#454646';
     body.style.backgroundColor = '#212529';
     themeTxt.innerHTML = `<span onclick="changeTheme('light')">light mode</span>`;
     footer.style.backgroundColor = '#454646';
+    infoCard.style.backgroundColor = '#454646';
+    infoCard.style.color = 'white';
 }
 
-function changeThemeToLight(navbar, body, themeTxt, footer) {
+function changeThemeToLight(navbar, body, themeTxt, footer, infoCard) {
     navbar.style.backgroundColor = '#212529';
     body.style.backgroundColor = 'white';
     themeTxt.innerHTML = `<span onclick="changeTheme('dark')">dark mode</span>`;
     footer.style.backgroundColor = '#212529';
+    infoCard.style.backgroundColor = 'white';
+    infoCard.style.color = 'black';
 }
 
 // ========== BIG CARD ==========
@@ -112,12 +116,13 @@ function loadBigCardTypesTemplate(id, i, color) {
         <div class="pokemon-big-type" style="background: ${color};"><b>${allPokemons[id]['types'][i]['type']['name']}</b></div>`;
 }
 
+//style="color: ${color}; border-bottom: 2px solid #3f51b5;"
 function loadPokemonNav(id) {
     return `
         <nav class="pokemon-info-nav">
             <table style="width: 100%; margin-left: 2%; margin-right: 2%">
                 <tr>
-                    <td id="info-headline-about" onclick="loadBigCardInfos(${id})" style="color: black; border-bottom: 2px solid #3f51b5;"><b>Infos</b></td>
+                    <td id="info-headline-about" onclick="loadBigCardInfos(${id})"><b>Infos</b></td>
                     <td id="info-headline-basisStats" onclick="loadBigCardState(${id})"><b>Basiswerte</b></td>
                     <td id="info-headline-evolution" onclick="loadBigCardEvolution(${id})"><b>Entwicklungen</b></td>
                     <td id="info-headline-moves" onclick="loadBigCardMoves(${id})"><b>Attacken</b></td>
@@ -129,17 +134,59 @@ function loadPokemonNav(id) {
 
 function loadBigCardInfosTemplate(id, height, weight) {
     return `
-        <table style="width: 50%">
+        <table style="width: 60%">
             <tr>
-                <td>Größe:</td>
+                <td><b>Größe:</b></td>
                 <td style="text-align: right;">${height} m</td>
             </tr>
             <tr>
-                <td>Gewicht:</td>
+                <td><b>Gewicht:</b></td>
                 <td style="text-align: right;">${weight} kg</td>
+            </tr>
+        </table>
+        <table style="width: 70%;">
+            <tr>
+                <td><b>Gattung:</b></td>
+                <td style="text-align: center;">${allPokemons[id]['genus']}</td>
             </tr>
         </table>
         <br>
         <h3>Beschreibung</h3>
         <span style="font-size: 15px">${allPokemons[id]['description']}</span>`;
+}
+
+function loadBigCardStateTemplate(stats) {
+    return `
+        <table style="width: 100%;">
+            <tr>
+                <td>HP</td>
+                <td style="text-align: center;"><b>${stats[0]['base_stat']}</b></td>
+                <td><progress max="250" value="${stats[0]['base_stat']}"> ${stats[0]['base_stat']} </progress></td>
+            </tr>
+            <tr>
+                <td>Angriff</td>
+                <td style="text-align: center;"><b>${stats[1]['base_stat']}</b></td>
+                <td><progress max="134" value="${stats[1]['base_stat']}"> ${stats[1]['base_stat']} </progress></td>
+            </tr>
+            <tr>
+                <td>Verteidigung</td>
+                <td style="text-align: center;"><b>${stats[2]['base_stat']}</b></td>
+                <td><progress max="180" value="${stats[2]['base_stat']}"> ${stats[2]['base_stat']} </progress></td>
+            </tr>
+            <tr>
+                <td>Spez. Angriff</td>
+                <td style="text-align: center;"><b>${stats[3]['base_stat']}</b></td>
+                <td><progress max="135" value="${stats[3]['base_stat']}"> ${stats[3]['base_stat']} </progress></td>
+            </tr>
+            <tr>
+                <td>Spez. Verteidigung</td>
+                <td style="text-align: center;"><b>${stats[4]['base_stat']}</b></td>
+                <td><progress max="125" value="${stats[4]['base_stat']}"> ${stats[4]['base_stat']} </progress></td>
+            </tr>
+            <tr>
+                <td>Spez. Initiative</td>
+                <td style="text-align: center;"><b>${stats[5]['base_stat']}</b></td>
+                <td><progress max="150" value="${stats[5]['base_stat']}"> ${stats[5]['base_stat']} </progress></td>
+            </tr>
+        </table>`;
 }

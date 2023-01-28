@@ -5,6 +5,7 @@ let currentPokemons = []; // current showed Pokemons
 let currentCount = 1;
 let newCount = 6;
 let maxCount = 151;
+let globalTheme;
 
 async function getPokemons() {
     load();
@@ -18,14 +19,13 @@ async function getCurrentPokemons() {
         currentPokemons.push(currentPokemon);
         renderPokemon();
     }
-    loadMorePokemonBtn();
     currentCount = newCount;
-
     closeLoading();
 
     if(allPokemons.length < maxCount){
-        loadBackgroundPokemons();
+        await loadBackgroundPokemons();
     }
+    loadMorePokemonBtn();
 }
 
 // load Pokemons from API if not loaded in Array allPokemons
@@ -45,7 +45,6 @@ async function loadBackgroundPokemons() {
         await getCurrentPokemonInfo(j);
         allPokemons.push(currentPokemon);
     }
-
 }
 
 // get German Name and Description
@@ -53,6 +52,7 @@ async function getCurrentPokemonInfo(x) {
     await loadPokemonArray(x);
     let currentSpecies = await loadSpecies();
     loadName(currentSpecies);
+    loadGenus(currentSpecies);
     loadDescription(currentSpecies);
     pokemonType();    
 } 
@@ -106,6 +106,16 @@ function loadName(currentSpecies) {
         if(text['language']['name'] == 'de'){
             currentPokemon['name_en'] = currentPokemon['name'];
             currentPokemon['name'] = text['name'];
+            break;
+        }
+    }
+}
+
+function loadGenus(currentSpecies) {
+    for(i=0; i < currentSpecies['genera'].length; i++) {
+        let text = currentSpecies['genera'][i];
+        if(text['language']['name'] == 'de'){
+            currentPokemon['genus'] = text['genus'];
             break;
         }
     }
@@ -172,12 +182,19 @@ function changeTheme(theme) {
     let body = document.getElementById('body');
     let themeTxt = document.getElementById('siteTheme');
     let footer = document.getElementById('footer');
+    let infoCard = document.getElementById('pokemon-info-main');
 
+    changeThemeQuery(theme, navbar, body, themeTxt, footer, infoCard);
+
+    globalTheme = theme;
+}
+
+function changeThemeQuery(theme, navbar, body, themeTxt, footer, infoCard) {
     if(theme == 'dark'){
-        changeThemeToDark(navbar, body, themeTxt, footer);
+        changeThemeToDark(navbar, body, themeTxt, footer, infoCard);
         save('dark');
     } else {
-        changeThemeToLight(navbar, body, themeTxt, footer);
+        changeThemeToLight(navbar, body, themeTxt, footer, infoCard);
         save('light');
     }
 }
@@ -200,14 +217,23 @@ function openBigView() {
     let main = document.getElementById('main');
     document.getElementById('bigView').classList.remove('d-none');
     main.classList.add('main-bg');
-
-    //main.style.position = 'relative';
     main.style.overflow = 'hidden'
 }
 
 function renderBigCard(id) {
+    //let color = getBigCardNavColor();
+
     document.getElementById('pokemon-big-header').innerHTML = loadBigCardHeaderTemplate(id);
-    document.getElementById('pokemon-info-main').innerHTML = loadPokemonNav(id);
+    loadBigCardInfos(id);
+    //document.getElementById('pokemon-info-main').innerHTML = loadPokemonNav(id, color);
+}
+
+function getBigCardNavColor() {
+    if(globalTheme == 'dark') {
+        return 'white';
+    } else {
+        return 'black';
+    }
 }
 
 function loadBigCardHeaderBackground(id) {
@@ -226,8 +252,21 @@ function loadBigCardTypes(id) {
     }
 }
 
+function bigCardNavStyle(id) {
+    document.getElementById('pokemon-info-main').innerHTML = loadPokemonNav(id);
+}
+
 function loadBigCardInfos(id) {
-    let infoContainer = document.getElementById('pokemon-info-container');
+    bigCardNavStyle(id);
+
+    let navInfo = document.getElementById('info-headline-about');
+    navInfo.style.color = getBigCardNavColor();
+    navInfo.style.borderBottom = '2px solid #3f51b5';
+
+    pokemonHeightWeight(id);
+}
+
+function pokemonHeightWeight(id) {
     let height = allPokemons[id]['height'] / 10;
     //height = height.toString(10);
     height = height.toFixed(1);
@@ -238,11 +277,19 @@ function loadBigCardInfos(id) {
     weight = weight.toFixed(1);
     weight = weight.replace(".", ",");
 
-    infoContainer.innerHTML = loadBigCardInfosTemplate(id, height, weight);
+    document.getElementById('pokemon-info-container').innerHTML = loadBigCardInfosTemplate(id, height, weight);
 }
 
 function loadBigCardState(id) {
-    // Base State
+    bigCardNavStyle(id);
+
+    let navInfo = document.getElementById('info-headline-basisStats');
+    navInfo.style.color = getBigCardNavColor();
+    navInfo.style.borderBottom = '2px solid #3f51b5';
+
+    let stats = allPokemons[id]['stats'];
+
+    document.getElementById('pokemon-info-container').innerHTML = loadBigCardStateTemplate(stats);
 }
 
 function loadBigCardEvolution(id) {
