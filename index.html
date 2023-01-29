@@ -12,8 +12,10 @@
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./styles/fonts.css">
 
-    <script src="./script.js"></script>
-    <script src="./template.js"></script>
+    <script src="./scripts/script.js"></script>
+    <script src="./scripts/template.js"></script>
+    <script src="./scripts/localStorage.js"></script>
+    <script src="./scripts/theme.js"></script>
 
 </head>
 
@@ -28,9 +30,7 @@
     <div id="bigView"  onclick="closeBigView()" class="d-none">
         <div class="bigView-window" onclick="stopClosing()">
             <div class="bigView-close"><img src="./img/icons/close.png" onclick="closeBigView()"></div>
-            <div id="pokemon-big-header" class="pokemon-big" style="background: linear-gradient(to bottom, #c42424,#f37878,#c42424);"></div>
-
-            <div id="pokemon-info-main"></div>
+            <div id="big-view-content"></div>
 
         </div>
     </div>
@@ -56,7 +56,7 @@
 
         <!-- ========== Footer with impressum and privacy policy ========== -->
         <footer id="footer">
-            <span>Impressum</span>
+            <span onclick="impressum()">Impressum</span>
             <span>Datenschutzerklärung</span>
             <a href="https://github.com/a13xl" target="new Tab"><img src="./img/icons/github_white.png" alt="github icon" title="Github"></a>
         </footer>

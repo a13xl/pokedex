@@ -54,7 +54,8 @@ async function getCurrentPokemonInfo(x) {
     loadName(currentSpecies);
     loadGenus(currentSpecies);
     loadDescription(currentSpecies);
-    pokemonType();    
+    //getEvolutionChain(currentSpecies);
+    pokemonType();  
 } 
 
 function loadMorePokemonBtn() {
@@ -132,6 +133,72 @@ function loadDescription(currentSpecies) {
     }
 }
 
+// not complete ======================================================================================================================
+async function getEvolutionChain(currentSpecies) {
+    let url = currentSpecies['evolution_chain']['url'];
+    let response = await fetch(url);
+    let currentEvolution = await response.json();
+
+    let minLvlEvolution1 = '';
+    let minLvlEvolution2 = '';
+    let evolution1 = '';
+    let evolution2 = '';
+    let evolution3 = '';
+    
+    // 1st Evolution
+    evolution1 = currentEvolution['chain']['species']['name'];
+    // 2nd Evolution
+    try {
+        evolution2 = currentEvolution['chain']['evolves_to'][0]['species']['name'];
+    } catch {}
+    // 3rd Evolution
+    try {
+        evolution3 = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['species']['name'];
+    } catch {}
+
+    // Evolution throw Lvl up
+    try{
+        let trigger = currentEvolution['chain']['evolves_to'][0]['evolution_details'][0]['trigger']['name'];
+        if(trigger == "level-up") {
+            // first Evolution Level
+            minLvlEvolution1 = currentEvolution['chain']['evolves_to'][0]['evolution_details'][0]['min_level'];
+            // Evolution throw Trade
+        } else if(trigger == "trade") {
+            trigger = currentEvolution['chain']['evolves_to'][0]['evolution_details'][0]['trigger']['name'];
+            // Evolution throw Item
+        } else {
+            try {
+                trigger = currentEvolution['chain']['evolves_to'][0]['evolution_details'][0]['item']['name'];
+            } catch {
+                trigger = '';
+            }
+        }
+    } catch {}
+
+    // 3rd evolution (second lvl up, ...)
+    if(evolution3.length > 0) {
+        trigger = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['trigger']['name'];
+        if(trigger == "level-up") {
+            try {
+                minLvlEvolution2 = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['min_level'];
+            } catch {}  // Evolution throw Trade
+        } else if(trigger == "trade") { 
+            trigger = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['trigger']['name']
+            // Evolution throw Item
+        } else {
+            try {
+                trigger = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['item']['name'];
+            } catch {
+                trigger = '';
+            }
+        }
+    } 
+
+    //console.log(evolution1 + ' => ' + evolution2 + ' => ' + evolution3);
+    //debugger;
+}
+// not complete ======================================================================================================================
+
 function renderPokemon() {
     let nr = currentPokemon['id'];
     document.getElementById('pokemon-name-' + nr).innerHTML = currentPokemon['name'];
@@ -176,29 +243,6 @@ function pokemonTypeTemplate(types, i, typeColor) {
     typeIcon.title = currentPokemon['types'][i]['type']['name'];
 }
 
-// ========== DARK / LIGHT MODE ==========
-function changeTheme(theme) {
-    let navbar = document.getElementById('navbar');
-    let body = document.getElementById('body');
-    let themeTxt = document.getElementById('siteTheme');
-    let footer = document.getElementById('footer');
-    let infoCard = document.getElementById('pokemon-info-main');
-
-    changeThemeQuery(theme, navbar, body, themeTxt, footer, infoCard);
-
-    globalTheme = theme;
-}
-
-function changeThemeQuery(theme, navbar, body, themeTxt, footer, infoCard) {
-    if(theme == 'dark'){
-        changeThemeToDark(navbar, body, themeTxt, footer, infoCard);
-        save('dark');
-    } else {
-        changeThemeToLight(navbar, body, themeTxt, footer, infoCard);
-        save('light');
-    }
-}
-
 // ========== SEARCH POKEMON ==========
 
 
@@ -221,11 +265,10 @@ function openBigView() {
 }
 
 function renderBigCard(id) {
-    //let color = getBigCardNavColor();
-
+    document.getElementById('big-view-content').innerHTML = createBigCardContainer();
     document.getElementById('pokemon-big-header').innerHTML = loadBigCardHeaderTemplate(id);
     loadBigCardInfos(id);
-    //document.getElementById('pokemon-info-main').innerHTML = loadPokemonNav(id, color);
+    changeThemeBigView();
 }
 
 function getBigCardNavColor() {
@@ -293,11 +336,85 @@ function loadBigCardState(id) {
 }
 
 function loadBigCardEvolution(id) {
-    // Entwicklungsstufen
+    bigCardNavStyle(id);
+
+    let navInfo = document.getElementById('info-headline-evolution');
+    navInfo.style.color = getBigCardNavColor();
+    navInfo.style.borderBottom = '2px solid #3f51b5';
+
+    console.log(loadEvolution(id));
 }
 
-function loadBigCardMoves(id) {
-    // Attacken
+// not complete ======================================================================================================================
+async function loadEvolution(id) {
+    let url = `https://pokeapi.co/api/v2/evolution-chain/${id}`;
+    let response = await fetch(url);
+    let currentEvolution = await response.json();
+
+    return currentEvolution;
+}
+// not complete ======================================================================================================================
+
+async function loadMoves(id) {
+    let movesMachine = [];
+    let movesLvlUp = [];
+    let moveLvlUp; // help value to create movesLvlUp array
+
+    let move = allPokemons[id]['moves'];
+    for(x=0; x < move.length; x++) {
+        if(move[x]["version_group_details"][0]["version_group"]['name'] == 'red-blue'){
+            let moveNameDe = await getMoveNameDe(move, x);
+            if(move[x]['version_group_details'][0]['move_learn_method']['name'] == 'machine') {
+                movesMachine.push(moveNameDe);
+            } else if(move[x]['version_group_details'][0]['move_learn_method']['name'] == 'level-up') {
+                moveLvlUp = {'name': moveNameDe, 'lvl': move[x]['version_group_details'][0]['level_learned_at']};
+                movesLvlUp.push(moveLvlUp);
+            } else {
+                console.log('ERROR Move ', moveNameDe);
+            }
+        }
+    }
+    movesLvlUp = sortByMax(movesLvlUp); // sort Level up moves from lowest to highest
+    createBigCardMoves(movesMachine, movesLvlUp);
+}
+
+function sortByMax(array) {
+    return array.sort(function (a, b) {
+        return a.lvl - b.lvl
+    });
+}
+
+async function getMoveNameDe(move, moveNr) {
+    let url = move[moveNr]['move']['url'];
+    let response = await fetch(url);
+    moveName = await response.json();
+
+    let moveNameDe = moveName['names'][4]['name']
+    return moveNameDe
+}
+
+function loadBigCardMoves(id){
+    bigCardNavStyle(id);
+
+    let navInfo = document.getElementById('info-headline-moves');
+    navInfo.style.color = getBigCardNavColor();
+    navInfo.style.borderBottom = '2px solid #3f51b5';
+
+    loadMoves(id);
+}
+
+function createBigCardMoves(movesMachine, movesLvlUp) {
+    document.getElementById('pokemon-info-container').innerHTML = createMovesArea();
+    document.getElementById('pokemon-moves-lvl').innerHTML = '<h3>Levelaufstieg</h3>';
+    document.getElementById('pokemon-moves-machine').innerHTML = '<h3>Technische-/Versteckte Maschine</h3>';
+
+    for(x=0; x < movesLvlUp.length; x++) {
+        document.getElementById('pokemon-moves-lvl').innerHTML += createMovesLvlUpTemplate(movesLvlUp[x]);
+    }
+
+    for(y=0; y < movesMachine.length; y++) {
+        document.getElementById('pokemon-moves-machine').innerHTML += createMovesMachineTemplate(movesMachine[y]);
+    }
 }
 
 function closeBigView() {
@@ -317,16 +434,11 @@ function closeLoading() {
     document.getElementById('main').classList.remove('main-bg');
 }
 
-// ========== LOCAL STORAGE ==========
-function save(theme) {
-    let currentThemeAsText = JSON.stringify(theme);
-    localStorage.setItem('Pokedex_Theme', currentThemeAsText);
-}
-
-function load() {
-    let currentThemeAsText = localStorage.getItem('Pokedex_Theme');
-
-    if(currentThemeAsText) {
-        changeTheme(JSON.parse(currentThemeAsText));
-    }
+/* ========== FOOTER ========== */
+function impressum() {
+    let pokemonIndex = 0;
+    openBigView();
+    renderBigCard(pokemonIndex);
+    document.getElementById('big-view-content').innerHTML = impressumTemplate();
+    changeThemeImpressum();
 }

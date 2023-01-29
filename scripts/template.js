@@ -76,25 +76,57 @@ function getTypeColorIcon(type) {
 }
 
 // ========== DARK / LIGHT MODE ==========
-function changeThemeToDark(navbar, body, themeTxt, footer, infoCard) {
+function changeThemeToDark(navbar, body, themeTxt, footer) {
     navbar.style.backgroundColor = '#454646';
     body.style.backgroundColor = '#212529';
     themeTxt.innerHTML = `<span onclick="changeTheme('light')">light mode</span>`;
     footer.style.backgroundColor = '#454646';
-    infoCard.style.backgroundColor = '#454646';
-    infoCard.style.color = 'white';
+    //infoCard.style.backgroundColor = '#454646';
+    //infoCard.style.color = 'white';
 }
 
-function changeThemeToLight(navbar, body, themeTxt, footer, infoCard) {
+function changeThemeToLight(navbar, body, themeTxt, footer) {
     navbar.style.backgroundColor = '#212529';
     body.style.backgroundColor = 'white';
     themeTxt.innerHTML = `<span onclick="changeTheme('dark')">dark mode</span>`;
     footer.style.backgroundColor = '#212529';
+    //infoCard.style.backgroundColor = 'white';
+    //infoCard.style.color = 'black';
+}
+
+function changeThemeBigViewToDark(bigViewContent, infoCard) {
+    infoCard.style.backgroundColor = '#454646';
+    infoCard.style.color = 'white';
+
+    bigViewContent.style.backgroundColor = '#454646';
+    bigViewContent.style.color = 'white';
+}
+
+function changeThemeBigViewToLight(bigViewContent, infoCard) {
     infoCard.style.backgroundColor = 'white';
     infoCard.style.color = 'black';
+
+    bigViewContent.style.backgroundColor = 'white';
+    bigViewContent.style.color = 'black';
+}
+
+function changeThemeImpressumToDark(impressumTel, impressumEMail) {
+    impressumTel.style.color = 'yellow';
+    impressumEMail.style.color = 'yellow';
+}
+
+function changeThemeImpressumToLight(impressumTel, impressumEMail) {
+    impressumTel.style.color = '-webkit-link';
+    impressumEMail.style.color = '-webkit-link';
 }
 
 // ========== BIG CARD ==========
+function createBigCardContainer() {
+    return `
+        <div id="pokemon-big-header" class="pokemon-big"></div>
+        <div id="pokemon-info-main"></div>`;
+}
+
 function loadBigCardHeaderTemplate(id) {
     return `
         <div class="pokemon-big-headline">
@@ -144,7 +176,7 @@ function loadBigCardInfosTemplate(id, height, weight) {
                 <td style="text-align: right;">${weight} kg</td>
             </tr>
         </table>
-        <table style="width: 70%;">
+        <table style="width: 75%;">
             <tr>
                 <td><b>Gattung:</b></td>
                 <td style="text-align: center;">${allPokemons[id]['genus']}</td>
@@ -176,7 +208,7 @@ function loadBigCardStateTemplate(stats) {
             <tr>
                 <td>Spez. Angriff</td>
                 <td style="text-align: center;"><b>${stats[3]['base_stat']}</b></td>
-                <td><progress max="135" value="${stats[3]['base_stat']}"> ${stats[3]['base_stat']} </progress></td>
+                <td><progress max="154" value="${stats[3]['base_stat']}"> ${stats[3]['base_stat']} </progress></td>
             </tr>
             <tr>
                 <td>Spez. Verteidigung</td>
@@ -189,4 +221,44 @@ function loadBigCardStateTemplate(stats) {
                 <td><progress max="150" value="${stats[5]['base_stat']}"> ${stats[5]['base_stat']} </progress></td>
             </tr>
         </table>`;
+}
+
+function createMovesArea() {
+    return `
+        <div id="pokemon-moves">
+            <div id="pokemon-moves-lvl"></div>
+            <br>
+            <div id="pokemon-moves-machine"></div>
+        </div>`;
+}
+
+function createMovesLvlUpTemplate(moveLvlUp) {
+    return `
+        <table width="70%">
+            <tr>
+                <td>${moveLvlUp['name']}</td>
+                <td style="text-align: right;">Level ${moveLvlUp['lvl']}</td>
+            </tr>
+        </table>`;
+}
+
+function createMovesMachineTemplate(moveMachine) {
+    return `
+        <span>${moveMachine}</span> <br>`;
+}
+
+/* ========== FOOTER ========== */
+function impressumTemplate() {
+    return `
+        <div id="impressum" class="impressum card-body">
+            <h2 class="card-title" style="margin-bottom: 10%;">IMPRESSUM</h2>
+            <div class="answer-info" style="margin-bottom: 30%;">
+                <p>Angaben gemäß § 5 TMG</p><p>Alexander Lovasz <br> 
+                Gärtnerweg 1<br> 
+                83329 Waging am See <br> <br></p>
+                <p><strong>Kontakt:</strong> <br>
+                Telefon: <a id="impressumTel" href="tel: 08681 4790 946">08681 4790 946</a><br>
+                E-Mail: <a id="impressumEMail" href='mailto:general01@tuta.io'>general01@tuta.io</a></p>
+            </div>
+        </div>`;
 }
