@@ -244,7 +244,12 @@ function createMovesLvlUpTemplate(moveLvlUp) {
 
 function createMovesMachineTemplate(moveMachine) {
     return `
-        <span>${moveMachine}</span> <br>`;
+        <span>${moveMachine} | </span>`;
+}
+
+function createMovesMachineTemplateLast(moveMachine) {
+    return `
+        <span>${moveMachine}</span>`;
 }
 
 /* ========== FOOTER ========== */
