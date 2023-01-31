@@ -3,7 +3,7 @@ let searchedPokemon = [];
 let currentPokemon; // Array with Pokemon infos
 let currentPokemons = []; // current showed Pokemons
 let currentCount = 1;
-let newCount = 6;
+let newCount = 141;
 let maxCount = 151;
 let globalTheme;
 
@@ -150,23 +150,94 @@ async function getEvolutionChain(currentSpecies) {
 
 // not complete ==============================================================================
 function pushEvolution(evolutionChain) {
-    let evolution = [];
-    let evolution1 = getEvolution1(evolutionChain);
-    evolution.push(evolution1);
+    let evolution; // = [];
 
-    let evolution2 = getEvolution2(evolutionChain);
-    if(evolution2) {
-        evolution.push(evolution2);
-        let evolution3 = getEvolution3(evolutionChain);
-        if(evolution3) {
-            evolution.push(evolution3);
+    //debugger;
+/*
+    if(evolutionChain['chain']['evolves_to'].length > 1){
+        evolutionStones(evolutionChain);
+    } else { */
+        evolution = pushEvolutionElseStatement(evolutionChain);
+        /* let evolution1 = getEvolution1(evolutionChain);
+        if(evolution1) {
+            evolution.push(evolution1);
         }
-    }
-    
+
+        let evolution2 = getEvolution2(evolutionChain);
+        if(evolution2) {
+            evolution.push(evolution2);
+            let evolution3 = getEvolution3(evolutionChain);
+            if(evolution3) {
+                evolution.push(evolution3);
+            }
+        } */
+    //}
     console.log(currentPokemon['name'])
     console.log(evolution);
 }
 
+function pushEvolutionElseStatement(evolutionChain) {
+    let evolution = [];
+    let evolution1;
+
+    let basis = getEvolution('basis', evolutionChain['chain']);
+    evolution.push(basis);
+
+    try {
+        let evols1Start = evolutionChain['chain']['evolves_to'][0];
+        let evols1End = evols1Start['evolution_details'][0];
+        evolution1 = getEvolution('evolution1', evols1Start, evols1End);
+    } catch {}
+
+    if(evolution1) {
+        evolution.push(evolution1);
+        let evolution2; // not working!!!!!!!!!!!!!!!!!!!!!
+    debugger;
+        try {
+            evolution2 = getEvolution('evolution2', evols1Start['evolves_to'][0], evols1Start['evolves_to'][0]['evolution_details'][0]);
+        } catch {}
+        if(evolution2) {
+            evolution.push(evolution2);
+        }
+    }
+    return evolution;
+}
+
+/*
+function getBasisPokemon(evolutionChain) {
+    let name = evolutionChain['chain']['species']['name'];
+    var myJson = fillEvolution(name);
+    return myJson;
+}
+*/
+
+function getEvolution(evolution, evolutionChainStart, evolutionChainEnd) {
+    let name;
+    let trigger;
+    let lvl;
+    let item;
+
+    try {
+        name = evolutionChainStart['species']['name'];
+    } catch {}
+
+    try {
+        trigger = evolutionChainEnd['trigger']['name'];
+    } catch {}
+
+    try {
+        lvl = evolutionChainEnd['min_level'];
+    } catch {}
+
+    try {
+        item = evolutionChainEnd['item']['name'];
+    } catch {}
+
+    var myJson = fillEvolution(evolution, name, trigger, lvl, item);
+    return myJson;
+}
+
+/*
 function getEvolution1(evolutionChain) {
     let name = evolutionChain['chain']['species']['name'];
     let trigger;
@@ -185,9 +256,12 @@ function getEvolution1(evolutionChain) {
         item = evolutionChain['chain']['evolves_to'][0]['evolution_details'][0]['item']['name'];
     } catch {}
 
-    var myJson = fillEvolution(name, trigger, lvl);
-    return myJson;
+    if(trigger == 'level-up' && lvl || item) {
+        var myJson = fillEvolution('evolution1', name, trigger, lvl, item);
+        return myJson;
+    }
 }
+
 
 function getEvolution2(evolutionChain) {
     let name;
@@ -211,8 +285,7 @@ function getEvolution2(evolutionChain) {
         item = evolutionChain['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['item']['name'];
     } catch {}
 
-    var myJson = fillEvolution(name, trigger, lvl);
-
+    var myJson = fillEvolution('evolution2', name, trigger, lvl, item);
     return myJson;
 }
 
@@ -226,21 +299,34 @@ function getEvolution3(evolutionChain) {
         name = evolutionChain['chain']['evolves_to'][0]['evolves_to'][0]['species']['name'];
     } catch {}
     
-    var myJson = fillEvolution(name, trigger, lvl);
+    var myJson = fillEvolution('evolution3', name, trigger, lvl, item);
     return myJson;
 }
+*/
 
-function fillEvolution(name, trigger, lvl) {
+// =========== AM UEBERLEGEN WIES BESSER GEHT ==============
+function evolutionStones(evolutionChain) {
+    let name = evolutionChain['chain']['species']['name'];
+    let trigger;
+    let item;
+
+    for(x=0; x < evolutionChain['chain']['evolves_to'].length; x++) {
+
+    }
+}
+// =========== AM UEBERLEGEN WIES BESSER GEHT ==============
+
+function fillEvolution(evolution, name, trigger, lvl, item) {
     if(trigger){
         if(trigger == 'level-up' && lvl > 0) {
-            return {'name': name, 'trigger': trigger, 'lvl': lvl};
+            return {[evolution]: [{'name': name, 'trigger': trigger, 'lvl': lvl}]};
         } else if(trigger == 'use-item') {
-            
+            return {[evolution]: [{'name': name, 'trigger': trigger, 'item': item}]};
         } else {
-            return {'name': name, 'trigger': trigger};
+            return {[evolution]: [{'name': name, 'trigger': trigger}]};
         }
     } else if(name) {
-        return {'name': name};
+        return {[evolution]: [{'name': name}]};
     }
 }
 
