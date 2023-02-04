@@ -3,13 +3,14 @@ let searchedPokemon = [];
 let currentPokemon; // Array with Pokemon infos
 let currentPokemons = []; // current showed Pokemons
 let currentCount = 1;
-let newCount = 141;
+let newCount = 10;
 let maxCount = 151;
 let globalTheme;
 
 async function getPokemons() {
     load();
     await getCurrentPokemons();
+    closeLoading();
 }
 
 async function getCurrentPokemons() {
@@ -20,12 +21,11 @@ async function getCurrentPokemons() {
         renderPokemon();
     }
     currentCount = newCount;
-    closeLoading();
+    loadMorePokemonBtn();
 
     if(allPokemons.length < maxCount){
         await loadBackgroundPokemons();
     }
-    loadMorePokemonBtn();
 }
 
 // load Pokemons from API if not loaded in Array allPokemons
@@ -50,7 +50,7 @@ async function loadBackgroundPokemons() {
 // get German Name and Description
 async function getCurrentPokemonInfo(x) {
     await loadPokemonArray(x);
-    let currentSpecies = await loadSpecies();
+    let currentSpecies = await loadSpecies(currentPokemon['id']);
     //loadName(currentSpecies);
     currentPokemon['name_en'] = currentPokemon['name'];
     currentPokemon['name'] = currentSpecies['names'][5]['name'];
@@ -58,14 +58,13 @@ async function getCurrentPokemonInfo(x) {
     currentPokemon['genus'] = currentSpecies['genera'][4]['genus'];
     //loadDescription(currentSpecies);
     currentPokemon['description'] = currentSpecies['flavor_text_entries'][25]['flavor_text'].replace(/\n/gi, "<br>");
-
-    getEvolutionChain(currentSpecies);
     pokemonType();  
-} 
+}
+// getEvolutionChain(currentSpecies);
 
 function loadMorePokemonBtn() {
     if(newCount < maxCount){
-        document.getElementById('pokedexContainerBtn').innerHTML = `<button onclick="loadMorePokemons()">Mehr laden</button>`;
+        document.getElementById('pokedexContainerBtn').innerHTML = `<button onclick="loadMorePokemons()" style="">Mehr laden</button>`;
     }
 }
 
@@ -98,8 +97,8 @@ async function loadPokemonArray(pokemonNr){
 }
 
 // load Pokemon name and description in german
-async function loadSpecies() {
-    let url = `https://pokeapi.co/api/v2/pokemon-species/${currentPokemon['id']}`;
+async function loadSpecies(pokemonId) {
+    let url = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`; // `https://pokeapi.co/api/v2/pokemon-species/${currentPokemon['id']}`;
     let response = await fetch(url);
     let currentSpecies = await response.json();
 
@@ -140,78 +139,126 @@ function loadDescription(currentSpecies) {
 }
 */
 
-async function getEvolutionChain(currentSpecies) {
+async function getEvolutionChainData(id) {
+    let currentSpecies = await loadSpecies((id + 1));
     let url = currentSpecies['evolution_chain']['url'];
     let response = await fetch(url);
     let currentEvolution = await response.json();
 
-    pushEvolution(currentEvolution);
+    loadEvolutions(currentEvolution);
 }
 
 // not complete ==============================================================================
-function pushEvolution(evolutionChain) {
+function loadEvolutions(evolutionChain) {
     let evolution; // = [];
 
-    //debugger;
-/*
-    if(evolutionChain['chain']['evolves_to'].length > 1){
-        evolutionStones(evolutionChain);
-    } else { */
-        evolution = pushEvolutionElseStatement(evolutionChain);
-        /* let evolution1 = getEvolution1(evolutionChain);
-        if(evolution1) {
-            evolution.push(evolution1);
-        }
+    evolution = getEvolutions(evolutionChain);
 
-        let evolution2 = getEvolution2(evolutionChain);
-        if(evolution2) {
-            evolution.push(evolution2);
-            let evolution3 = getEvolution3(evolutionChain);
-            if(evolution3) {
-                evolution.push(evolution3);
-            }
-        } */
-    //}
-    console.log(currentPokemon['name'])
     console.log(evolution);
 }
 
-function pushEvolutionElseStatement(evolutionChain) {
+function getEvolutions(evolutionChain) {
     let evolution = [];
-    let evolution1;
+    let data;
 
-    let basis = getEvolution('basis', evolutionChain['chain']);
-    evolution.push(basis);
-
-    try {
-        let evols1Start = evolutionChain['chain']['evolves_to'][0];
-        let evols1End = evols1Start['evolution_details'][0];
-        evolution1 = getEvolution('evolution1', evols1Start, evols1End);
-    } catch {}
-
-    if(evolution1) {
-        evolution.push(evolution1);
-        let evolution2; // not working!!!!!!!!!!!!!!!!!!!!!
-    debugger;
-        try {
-            evolution2 = getEvolution('evolution2', evols1Start['evolves_to'][0], evols1Start['evolves_to'][0]['evolution_details'][0]);
-        } catch {}
-        if(evolution2) {
-            evolution.push(evolution2);
-        }
+    // Basis Evolution
+    data = getBasisEvolution(evolutionChain);
+    if(data.length > 0){
+        evolution.push(data);
     }
+    data = null;
+
+    // Evolution 1
+    data = getEvolution1(evolutionChain);
+    if(data.length > 0){
+        evolution.push(data);
+    }
+    data = null;
+
+    // Evolution 2
+    data = getEvolution2(evolutionChain);
+    if(data.length > 0){
+        evolution.push(data);
+    }
+    data = null;
+
     return evolution;
 }
 
-/*
-function getBasisPokemon(evolutionChain) {
-    let name = evolutionChain['chain']['species']['name'];
-    var myJson = fillEvolution(name);
-    return myJson;
-}
-*/
+function getBasisEvolution(evolutionChain) {
+    let evolutionStep = [];
+    let basis = getEvolution(evolutionChain['chain']);
+    let boolean = checkEvolutionExist(basis['name']);
 
-function getEvolution(evolution, evolutionChainStart, evolutionChainEnd) {
+    if(basis && boolean === Boolean(true)) {
+        evolutionStep.push(basis);
+    }
+    return evolutionStep;;
+}
+
+function getEvolution1(evolutionChain) {
+    let evolutionStep = [];
+    let evols1;
+
+    try {
+        evols1 = evolutionChain['chain']['evolves_to']; // [0]
+    } catch {}
+
+    if(evols1) {
+        for(y=0; y < evols1.length; y++) {
+            let evols1Start = evols1[y];
+            let evols1End = evols1Start['evolution_details'][0];
+            let evolution1 = getEvolution(evols1Start, evols1End);
+            boolean = checkEvolutionExist(evolution1['name']);
+
+            if(boolean === Boolean(true)) {
+                evolutionStep.push(evolution1);
+            }
+        }
+    }
+
+    return evolutionStep;
+}
+
+function getEvolution2(evolutionChain) {
+    let evolutionStep = [];
+    let evols2;
+
+    try {
+        evols2 = evolutionChain['chain']['evolves_to'][0]['evolves_to'];
+    } catch {}
+
+    if(evols2) {
+        for(y=0; y < evols2.length; y++) {
+            let evols2Start = evols2[y];
+            let evols2End = evols2Start['evolution_details'][0];
+            
+            let evolution2 = getEvolution(evols2Start, evols2End);
+            boolean = checkEvolutionExist(evolution2['name']);
+
+            if(boolean === Boolean(true)) {
+                evolutionStep.push(evolution2);
+            }
+        }
+    }
+    return evolutionStep;
+}
+
+function checkEvolutionExist(name) {
+    var hasMatch =false;
+
+    for (var index = 0; index < allPokemons.length; ++index) {
+        var pokemon = allPokemons[index];
+        if(pokemon['name_en'] == name){
+            hasMatch = true;
+            break;
+        }
+    }
+
+    return hasMatch;
+}
+
+function getEvolution(evolutionChainStart, evolutionChainEnd) {
     let name;
     let trigger;
     let lvl;
@@ -221,6 +268,7 @@ function getEvolution(evolution, evolutionChainStart, evolutionChainEnd) {
         name = evolutionChainStart['species']['name'];
     } catch {}
 
+    // falls name nicht in 
     try {
         trigger = evolutionChainEnd['trigger']['name'];
     } catch {}
@@ -233,76 +281,9 @@ function getEvolution(evolution, evolutionChainStart, evolutionChainEnd) {
         item = evolutionChainEnd['item']['name'];
     } catch {}
 
-    var myJson = fillEvolution(evolution, name, trigger, lvl, item);
+    var myJson = fillEvolutionTrigger(name, trigger, lvl, item);
     return myJson;
 }
-
-/*
-function getEvolution1(evolutionChain) {
-    let name = evolutionChain['chain']['species']['name'];
-    let trigger;
-    let lvl;
-    let item;
-
-    try {
-        trigger = evolutionChain['chain']['evolves_to'][0]['evolution_details'][0]['trigger']['name'];
-    } catch {}
-
-    try {
-        lvl = evolutionChain['chain']['evolves_to'][0]['evolution_details'][0]['min_level'];
-    } catch {}
-
-    try {
-        item = evolutionChain['chain']['evolves_to'][0]['evolution_details'][0]['item']['name'];
-    } catch {}
-
-    if(trigger == 'level-up' && lvl || item) {
-        var myJson = fillEvolution('evolution1', name, trigger, lvl, item);
-        return myJson;
-    }
-}
-
-
-function getEvolution2(evolutionChain) {
-    let name;
-    let trigger;
-    let lvl;
-    let item;
-
-    try {
-        name = evolutionChain['chain']['evolves_to'][0]['species']['name'];
-    } catch {}
-
-    try{
-        trigger = evolutionChain['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['trigger']['name'];
-    } catch {}
-
-    try {
-        lvl = evolutionChain['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['min_level'];
-    } catch {}
-
-    try {
-        item = evolutionChain['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['item']['name'];
-    } catch {}
-
-    var myJson = fillEvolution('evolution2', name, trigger, lvl, item);
-    return myJson;
-}
-
-function getEvolution3(evolutionChain) {
-    let name;
-    let trigger;
-    let lvl;
-    let item;
-
-    try {
-        name = evolutionChain['chain']['evolves_to'][0]['evolves_to'][0]['species']['name'];
-    } catch {}
-    
-    var myJson = fillEvolution('evolution3', name, trigger, lvl, item);
-    return myJson;
-}
-*/
 
 // =========== AM UEBERLEGEN WIES BESSER GEHT ==============
 function evolutionStones(evolutionChain) {
@@ -316,17 +297,17 @@ function evolutionStones(evolutionChain) {
 }
 // =========== AM UEBERLEGEN WIES BESSER GEHT ==============
 
-function fillEvolution(evolution, name, trigger, lvl, item) {
+function fillEvolutionTrigger(name, trigger, lvl, item) {
     if(trigger){
         if(trigger == 'level-up' && lvl > 0) {
-            return {[evolution]: [{'name': name, 'trigger': trigger, 'lvl': lvl}]};
+            return {'name': name, 'trigger': trigger, 'lvl': lvl};
         } else if(trigger == 'use-item') {
-            return {[evolution]: [{'name': name, 'trigger': trigger, 'item': item}]};
+            return {'name': name, 'trigger': trigger, 'item': item};
         } else {
-            return {[evolution]: [{'name': name, 'trigger': trigger}]};
+            return {'name': name, 'trigger': trigger};
         }
     } else if(name) {
-        return {[evolution]: [{'name': name}]};
+        return {'name': name};
     }
 }
 
@@ -392,6 +373,15 @@ function searchByNameDe(searchTerm) {
         return pokemonName.indexOf(searchTerm) >= 0; // search term
     });
     console.log(searchResult);
+}
+
+function searchByNameEn(searchTerm) {
+    let searchResult = []
+    searchResult = allPokemons.filter((pokemon) => {
+        const pokemonName = pokemon['name_en'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
+        return pokemonName.indexOf(searchTerm) >= 0; // search term
+    });
+    //console.log(searchResult);
 }
 
 function getSearchInput() {
@@ -496,18 +486,7 @@ function loadBigCardEvolution(id) {
     navInfo.style.color = getBigCardNavColor();
     navInfo.style.borderBottom = '2px solid #3f51b5';
 
-    //let currentEvolution;
-    /*
-    let EvolveName1 = currentEvolution['chain']['species']['name'];
-    let EvolveTrigger1 = currentEvolution['chain']['evolves_to'][0]['evolution_details'][0]['trigger']['name'];
-    let EvolveLvl1 = currentEvolution['chain']['evolves_to'][0]['evolution_details'][0]['min_level'];
-
-    let EvolveName2 = currentEvolution['chain']['evolves_to'][0]['species']['name'];
-    let EvolveTrigger2 = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['trigger']['name'];
-    let EvolveLvl2 = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['evolution_details'][0]['min_level'];
-
-    let EvolveName3 = currentEvolution['chain']['evolves_to'][0]['evolves_to'][0]['species']['name'];
-    */
+    getEvolutionChainData(id);
 }
 
 // not complete ======================================================================================================================
@@ -563,17 +542,20 @@ function loadBigCardMoves(id){
 function createBigCardMoves(movesMachine, movesLvlUp) {
     document.getElementById('pokemon-info-container').innerHTML = createMovesArea();
     document.getElementById('pokemon-moves-lvl').innerHTML = '<h3>Levelaufstieg</h3>';
-    document.getElementById('pokemon-moves-machine').innerHTML = '<h3>Technische-/Versteckte Maschine</h3>';
 
     for(x=0; x < movesLvlUp.length; x++) {
         document.getElementById('pokemon-moves-lvl').innerHTML += createMovesLvlUpTemplate(movesLvlUp[x]);
     }
 
-    for(y=0; y < movesMachine.length; y++) {
-        if(y < (movesMachine.length -1)) {
-            document.getElementById('pokemon-moves-machine').innerHTML += createMovesMachineTemplate(movesMachine[y]);
-        } else {
-            document.getElementById('pokemon-moves-machine').innerHTML += createMovesMachineTemplateLast(movesMachine[y]);
+    if(movesMachine.length > 0) {
+        document.getElementById('pokemon-moves-machine').innerHTML = '<h3>Technische-/Versteckte Maschine</h3>';
+        for(y=0; y < movesMachine.length; y++) {
+        
+            if(y < (movesMachine.length -1)) {
+                document.getElementById('pokemon-moves-machine').innerHTML += createMovesMachineTemplate(movesMachine[y]);
+            } else {
+                document.getElementById('pokemon-moves-machine').innerHTML += createMovesMachineTemplateLast(movesMachine[y]);
+            }
         }
     }
 }
