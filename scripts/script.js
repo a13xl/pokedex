@@ -3,7 +3,7 @@ let searchedPokemon = [];
 let currentPokemon; // Array with Pokemon infos
 let currentPokemons = []; // current showed Pokemons
 let currentCount = 1;
-let newCount = 10;
+let newCount = 133;
 let maxCount = 151;
 let globalTheme;
 
@@ -60,7 +60,6 @@ async function getCurrentPokemonInfo(x) {
     currentPokemon['description'] = currentSpecies['flavor_text_entries'][25]['flavor_text'].replace(/\n/gi, "<br>");
     pokemonType();  
 }
-// getEvolutionChain(currentSpecies);
 
 function loadMorePokemonBtn() {
     if(newCount < maxCount){
@@ -138,164 +137,6 @@ function loadDescription(currentSpecies) {
     }
 }
 */
-
-async function getEvolutionChainData(id) {
-    let currentSpecies = await loadSpecies((id + 1));
-    let url = currentSpecies['evolution_chain']['url'];
-    let response = await fetch(url);
-    let currentEvolution = await response.json();
-
-    loadEvolutions(currentEvolution);
-}
-
-// not complete ==============================================================================
-function loadEvolutions(evolutionChain) {
-    let evolution; // = [];
-
-    evolution = getEvolutions(evolutionChain);
-
-    console.log(evolution);
-}
-
-function getEvolutions(evolutionChain) {
-    let evolution = [];
-    let data;
-
-    // Basis Evolution
-    data = getBasisEvolution(evolutionChain);
-    if(data.length > 0){
-        evolution.push(data);
-    }
-    data = null;
-
-    // Evolution 1
-    data = getEvolution1(evolutionChain);
-    if(data.length > 0){
-        evolution.push(data);
-    }
-    data = null;
-
-    // Evolution 2
-    data = getEvolution2(evolutionChain);
-    if(data.length > 0){
-        evolution.push(data);
-    }
-    data = null;
-
-    return evolution;
-}
-
-function getBasisEvolution(evolutionChain) {
-    let evolutionStep = [];
-    let basis = getEvolution(evolutionChain['chain']);
-    let boolean = checkEvolutionExist(basis['name']);
-
-    if(basis && boolean === Boolean(true)) {
-        evolutionStep.push(basis);
-    }
-    return evolutionStep;;
-}
-
-function getEvolution1(evolutionChain) {
-    let evolutionStep = [];
-    let evols1;
-
-    try {
-        evols1 = evolutionChain['chain']['evolves_to']; // [0]
-    } catch {}
-
-    if(evols1) {
-        for(y=0; y < evols1.length; y++) {
-            let evols1Start = evols1[y];
-            let evols1End = evols1Start['evolution_details'][0];
-            let evolution1 = getEvolution(evols1Start, evols1End);
-            boolean = checkEvolutionExist(evolution1['name']);
-
-            if(boolean === Boolean(true)) {
-                evolutionStep.push(evolution1);
-            }
-        }
-    }
-
-    return evolutionStep;
-}
-
-function getEvolution2(evolutionChain) {
-    let evolutionStep = [];
-    let evols2;
-
-    try {
-        evols2 = evolutionChain['chain']['evolves_to'][0]['evolves_to'];
-    } catch {}
-
-    if(evols2) {
-        for(y=0; y < evols2.length; y++) {
-            let evols2Start = evols2[y];
-            let evols2End = evols2Start['evolution_details'][0];
-            
-            let evolution2 = getEvolution(evols2Start, evols2End);
-            boolean = checkEvolutionExist(evolution2['name']);
-
-            if(boolean === Boolean(true)) {
-                evolutionStep.push(evolution2);
-            }
-        }
-    }
-    return evolutionStep;
-}
-
-function checkEvolutionExist(name) {
-    var hasMatch =false;
-
-    for (var index = 0; index < allPokemons.length; ++index) {
-        var pokemon = allPokemons[index];
-        if(pokemon['name_en'] == name){
-            hasMatch = true;
-            break;
-        }
-    }
-
-    return hasMatch;
-}
-
-function getEvolution(evolutionChainStart, evolutionChainEnd) {
-    let name;
-    let trigger;
-    let lvl;
-    let item;
-
-    try {
-        name = evolutionChainStart['species']['name'];
-    } catch {}
-
-    // falls name nicht in 
-    try {
-        trigger = evolutionChainEnd['trigger']['name'];
-    } catch {}
-
-    try {
-        lvl = evolutionChainEnd['min_level'];
-    } catch {}
-
-    try {
-        item = evolutionChainEnd['item']['name'];
-    } catch {}
-
-    var myJson = fillEvolutionTrigger(name, trigger, lvl, item);
-    return myJson;
-}
-
-// =========== AM UEBERLEGEN WIES BESSER GEHT ==============
-function evolutionStones(evolutionChain) {
-    let name = evolutionChain['chain']['species']['name'];
-    let trigger;
-    let item;
-
-    for(x=0; x < evolutionChain['chain']['evolves_to'].length; x++) {
-
-    }
-}
-// =========== AM UEBERLEGEN WIES BESSER GEHT ==============
 
 function fillEvolutionTrigger(name, trigger, lvl, item) {
     if(trigger){
@@ -381,7 +222,7 @@ function searchByNameEn(searchTerm) {
         const pokemonName = pokemon['name_en'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
         return pokemonName.indexOf(searchTerm) >= 0; // search term
     });
-    //console.log(searchResult);
+    return searchResult;
 }
 
 function getSearchInput() {
@@ -478,7 +319,6 @@ function loadBigCardState(id) {
     document.getElementById('pokemon-info-container').innerHTML = loadBigCardStateTemplate(stats);
 }
 
-// not complete ======================================================================================================================
 function loadBigCardEvolution(id) {
     bigCardNavStyle(id);
 
@@ -489,7 +329,72 @@ function loadBigCardEvolution(id) {
     getEvolutionChainData(id);
 }
 
-// not complete ======================================================================================================================
+function createBigCardEvolution(id, evolution) {
+    let evolutionContainer = document.getElementById('pokemon-info-container');
+    evolutionContainer.innerHTML = '';
+
+    if(evolution.length < 2) {
+        evolutionContainer.innerHTML = `<h2>${allPokemons[id]['name']} hat keine Entwicklung!</h2>`;
+    } else {
+        let evolution1 = evolution[1];
+
+        if(evolution1.length < 2) {
+            for(x=0; x < (evolution.length - 1); x++) {
+                let value1 = evolution[x][0];
+                let value2 = evolution[x+1];
+                let pokemon1 = searchByNameEn(value1['name']);
+                
+                if(value2.length > 1) {
+                    // more then 1 Evolution1 (evee)
+                    console.log('mehr als 1 Evolution gleiche Stufe')
+                } else {
+                    let pokemon2 = searchByNameEn(value2[0]['name']);
+                    let trigger;
+
+                    if(value2[0]['lvl']) {
+                        trigger = `Lvl ${value2[0]['lvl']}`;
+                    } else if(value2[0]['trigger'] == 'trade') {
+                        trigger = 'Tausch';
+                    } else if(value2[0]['item']) {
+                        let stonename = getStoneName(value2[0]['item']);
+                        trigger = `
+                        <img src="../img/stones/${value2[0]['item']}.png" alt="${value2[0]['item']}" title="${stonename}" style="height: 2rem; object-fit: contain"></img>`;
+                    }
+
+                    evolutionContainer.innerHTML += `
+                    <div style="width: 100%; display: flex; justify-content: space-between;">
+                        <div><img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
+                        <div style="display: flex; flex-direction: column; justify-content: center">
+                            ${trigger}
+                            <img src="../img/icons/arrow-right.png"></img>
+                        </div>
+                        <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']}" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
+                    </div>`;
+                }
+            }
+        }
+    }
+}
+
+function getStoneName(stoneEn) {
+    switch(stoneEn) {
+        case 'fire-stone':
+            return 'Feuerstein';
+        break;
+        case 'leaf-stone':
+            return 'Blattstein';
+        break;
+        case 'moon-stone':
+            return 'Mondstein';
+        break;
+        case 'thunder-stone':
+            return 'Donnerstein';
+        break;
+        case 'water-stone':
+            return 'Wasserstein';
+        break;
+    }
+}
 
 async function loadMoves(id) {
     let movesMachine = [];
