@@ -335,41 +335,37 @@ function createBigCardEvolution(id, evolution) {
     if(evolution.length < 2) {
         evolutionContainer.innerHTML = `<h2>${allPokemons[id]['name']} hat keine Entwicklung!</h2>`;
     } else {
-        let evolution1 = evolution[1];
+        for(x=0; x < (evolution.length - 1); x++) {
+            let value1 = evolution[x][0];
+            let value2 = evolution[x+1];
+            let pokemon1 = searchByNameEn(value1['name']);
 
-        if(evolution1.length < 2) {
-            for(x=0; x < (evolution.length - 1); x++) {
-                let value1 = evolution[x][0];
-                let value2 = evolution[x+1];
-                let pokemon1 = searchByNameEn(value1['name']);
-                
-                if(value2.length > 1) {
-                    // more then 1 Evolution1 (evee)
-                    console.log('mehr als 1 Evolution gleiche Stufe')
-                } else {
-                    let pokemon2 = searchByNameEn(value2[0]['name']);
-                    let trigger;
+            if(value2.length > 1) {
+                // more then 1 Evolution1 (evee)
+                console.log('mehr als 1 Evolution gleiche Stufe')
+            } else {
+                let pokemon2 = searchByNameEn(value2[0]['name']);
+                let trigger;
 
-                    if(value2[0]['lvl']) {
-                        trigger = `Lvl ${value2[0]['lvl']}`;
-                    } else if(value2[0]['trigger'] == 'trade') {
-                        trigger = 'Tausch';
-                    } else if(value2[0]['item']) {
-                        let stonename = getStoneName(value2[0]['item']);
-                        trigger = `
-                        <img src="../img/stones/${value2[0]['item']}.png" alt="${value2[0]['item']}" title="${stonename}" style="height: 2rem; object-fit: contain"></img>`;
-                    }
-
-                    evolutionContainer.innerHTML += `
-                    <div style="width: 100%; display: flex; justify-content: space-between;">
-                        <div><img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
-                        <div style="display: flex; flex-direction: column; justify-content: center">
-                            ${trigger}
-                            <img src="../img/icons/arrow-right.png"></img>
-                        </div>
-                        <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']}" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
-                    </div>`;
+                if(value2[0]['lvl']) {
+                    trigger = `Lvl ${value2[0]['lvl']}`;
+                } else if(value2[0]['trigger'] == 'trade') {
+                    trigger = 'Tausch';
+                } else if(value2[0]['item']) {
+                    let stonename = getStoneName(value2[0]['item']);
+                    trigger = `
+                    <img src="../img/stones/${value2[0]['item']}.png" alt="${value2[0]['item']}" title="${stonename}" style="height: 2rem; object-fit: contain"></img>`;
                 }
+
+                evolutionContainer.innerHTML += `
+                <div style="width: 100%; display: flex; justify-content: space-between;">
+                    <div><img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
+                    <div style="display: flex; flex-direction: column; justify-content: center">
+                        ${trigger}
+                        <img src="../img/icons/arrow-right.png"></img>
+                    </div>
+                    <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']}" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
+                </div>`;
             }
         }
     }

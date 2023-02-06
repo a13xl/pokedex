@@ -161,7 +161,7 @@ function loadPokemonNav(id) {
                 </tr>
             </table>
         </nav>
-        <div id="pokemon-info-container" style="margin: 4%;"></div>`;
+        <div id="pokemon-info-container"></div>`;
 }
 
 function loadBigCardInfosTemplate(id, height, weight) {
