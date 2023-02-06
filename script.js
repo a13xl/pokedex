@@ -242,10 +242,9 @@ function showPokemonBig(id) {
 }
 
 function openBigView() {
-    let main = document.getElementById('main');
     document.getElementById('bigView').classList.remove('d-none');
-    main.classList.add('main-bg');
-    main.style.overflow = 'hidden'
+    document.getElementById('main').classList.add('main-bg');
+    document.getElementById('body').style.overflow = 'hidden'
 }
 
 function renderBigCard(id) {
@@ -466,10 +465,9 @@ function createBigCardMoves(movesMachine, movesLvlUp) {
 }
 
 function closeBigView() {
-    let main = document.getElementById('main');
     document.getElementById('bigView').classList.add('d-none');
-    main.classList.remove('main-bg');
-    main.style.overflow = ''
+    document.getElementById('main').classList.remove('main-bg');
+    document.getElementById('body').style.overflow = ''
 }
 
 function stopClosing() {
@@ -480,6 +478,7 @@ function stopClosing() {
 function closeLoading() {
     document.getElementById('loading').classList.add('d-none');
     document.getElementById('main').classList.remove('main-bg');
+    document.getElementById('body').style.overflow = '';
 }
 
 /* ========== FOOTER ========== */
