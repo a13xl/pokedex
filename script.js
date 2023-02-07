@@ -340,9 +340,40 @@ function createBigCardEvolution(id, evolution) {
             let value2 = evolution[x+1];
             let pokemon1 = searchByNameEn(value1['name']);
 
-            if(value2.length > 1) {
-                // more then 1 Evolution1 (evee)
-                console.log('mehr als 1 Evolution gleiche Stufe')
+            if(value2.length > 1) { // Pokemon have more than 1 Evolution 1
+                evolutionContainer.innerHTML = `
+                <div style="width: 100%; display: flex; justify-content: space-between;">
+                    <div style="display: flex; align-items: center;">
+                        <img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem">
+                    </div>
+                    <div id="evolution1Container"></div>
+                </div>`;
+
+                for(x=0; x < value2.length; x++) {
+                    let pokemon2 = searchByNameEn(value2[x]['name']);
+                    let trigger;
+
+                    if(value2[x]['lvl']) {
+                        trigger = `Lvl ${value2[x]['lvl']}`;
+                    } else if(value2[x]['trigger'] == 'trade') {
+                        trigger = 'Tausch';
+                    } else if(value2[x]['item']) {
+                        let stonename = getStoneName(value2[x]['item']);
+                        trigger = `
+                        <img src="../img/stones/${value2[x]['item']}.png" alt="${value2[x]['item']}" title="${stonename}" style="height: 2rem; object-fit: contain"></img>`;
+                    }
+
+                    document.getElementById('evolution1Container').innerHTML += `
+                    <div style="display: flex; gap: 48px">
+                        <div style="display: flex; flex-direction: column; justify-content: center">
+                            ${trigger}
+                            <img src="../img/icons/arrow-right.png"></img>
+                        </div>
+                        <div>
+                            <img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" style="height: 7rem">
+                        </div>
+                    </div>`;
+                }
             } else {
                 let pokemon2 = searchByNameEn(value2[0]['name']);
                 let trigger;
@@ -364,7 +395,7 @@ function createBigCardEvolution(id, evolution) {
                         ${trigger}
                         <img src="../img/icons/arrow-right.png"></img>
                     </div>
-                    <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']}" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
+                    <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" style="height: 7rem"></div>
                 </div>`;
             }
         }
