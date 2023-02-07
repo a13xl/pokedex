@@ -166,6 +166,7 @@ function loadPokemonNav(id) {
 
 function loadBigCardInfosTemplate(id, height, weight) {
     return `
+    <div>
         <table style="width: 60%">
             <tr>
                 <td><b>Größe:</b></td>
@@ -184,7 +185,8 @@ function loadBigCardInfosTemplate(id, height, weight) {
         </table>
         <br>
         <h3>Beschreibung</h3>
-        <span style="font-size: 15px">${allPokemons[id]['description']}</span>`;
+        <span style="font-size: 15px">${allPokemons[id]['description']}</span>
+    </div>`;
 }
 
 function loadBigCardStateTemplate(stats) {
@@ -223,6 +225,63 @@ function loadBigCardStateTemplate(stats) {
         </table>`;
 }
 
+// EVOLUTION
+function createEvolutionsTemplate(pokemon1, pokemon2, trigger) {
+    return `
+    <div style="width: 100%; display: flex; justify-content: space-between;">
+        <div><img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
+        <div style="display: flex; flex-direction: column; justify-content: center">
+            ${trigger}
+            <img src="../img/icons/arrow-right.png"></img>
+        </div>
+        <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" style="height: 7rem"></div>
+    </div>`;
+}
+
+function createBasisSpecialTemplate(pokemon1) {
+    return `
+    <div class="pokemon-evolution-special">
+        <div style="display: flex; align-items: center;">
+            <img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem">
+        </div>
+        <div id="evolution1Container"></div>
+    </div>`;
+}
+
+function createEvolution1SpecialTemplate(pokemon2, trigger) {
+    return `
+    <div style="display: flex; gap: 48px">
+        <div style="display: flex; flex-direction: column; justify-content: center">
+            ${trigger}
+            <img src="../img/icons/arrow-right.png"></img>
+        </div>
+        <div>
+            <img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" style="height: 7rem">
+        </div>
+    </div>`;
+}
+
+function getStoneName(stoneEn) {
+    switch(stoneEn) {
+        case 'fire-stone':
+            return 'Feuerstein';
+        break;
+        case 'leaf-stone':
+            return 'Blattstein';
+        break;
+        case 'moon-stone':
+            return 'Mondstein';
+        break;
+        case 'thunder-stone':
+            return 'Donnerstein';
+        break;
+        case 'water-stone':
+            return 'Wasserstein';
+        break;
+    }
+}
+
+// MOVES
 function createMovesArea() {
     return `
         <div id="pokemon-moves">

@@ -11,7 +11,7 @@ function loadEvolutions(id, evolutionChain) {
     let evolution;
 
     evolution = getEvolutions(evolutionChain);
-console.log(evolution);
+
     createBigCardEvolution(id, evolution);
 }
 
