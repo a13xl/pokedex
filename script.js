@@ -10,7 +10,7 @@ let globalTheme;
 async function getPokemons() {
     load();
     await getCurrentPokemons();
-    closeLoading();
+    closeLoadingMain();
 }
 
 async function getCurrentPokemons() {
@@ -104,40 +104,6 @@ async function loadSpecies(pokemonId) {
     return currentSpecies;
 }
 
-/* =============== NOT IN USE ===============
-function loadName(currentSpecies) {
-    for(i=0; i < currentSpecies['names'].length; i++) {
-        let text = currentSpecies['names'][i];
-        if(text['language']['name'] == 'de'){
-            currentPokemon['name_en'] = currentPokemon['name'];
-            currentPokemon['name'] = text['name'];
-            break;
-        }
-    }
-}
-
-function loadGenus(currentSpecies) {
-    for(i=0; i < currentSpecies['genera'].length; i++) {
-        let text = currentSpecies['genera'][i];
-        if(text['language']['name'] == 'de'){
-            currentPokemon['genus'] = text['genus'];
-            break;
-        }
-    }
-}
-
-function loadDescription(currentSpecies) {
-    for(i=0; i < currentSpecies['flavor_text_entries'].length; i++) {
-        let text = currentSpecies['flavor_text_entries'][i];
-        if(text['language']['name'] == 'de'){
-            //currentPokemon['description'] = text['flavor_text'];
-            currentPokemon['description'] = text['flavor_text'].replace(/\n/gi, "<br>");
-            break;
-        }
-    }
-}
-*/
-
 function fillEvolutionTrigger(name, trigger, lvl, item) {
     if(trigger){
         if(trigger == 'level-up' && lvl > 0) {
@@ -199,12 +165,48 @@ function pokemonTypeTemplate(types, i, typeColor) {
 // ========== SEARCH POKEMON ==========
 function searchPokemon() {
     let searchTerm = getSearchInput();
+    let searchType = document.getElementById('searchType').value;
+    
+    clearArea();
 
     if(searchTerm.length > 0) {
-        searchByNameDe(searchTerm);
+        document.getElementById('pokedexContainerBtn').innerHTML = '';
+
+        switch (searchType) {
+            case 'NameDe':
+                searchedPokemon = searchByNameDe(searchTerm);
+                break;
+            case 'NameEn':
+                searchedPokemon = searchByNameEn(searchTerm);
+                break;
+            case 'TypeDe':
+                searchedPokemon = searchByTypeDe(searchTerm);
+                break;
+            case 'TypeEn':
+                searchedPokemon = searchByNameEn(searchTerm);
+                break;
+        }
+        
+        for (let x = 0; x < searchedPokemon.length; x++) {
+            currentPokemon = searchedPokemon[x];
+            loadArea(currentPokemon['id']);
+            renderPokemon();
+        }
     } else {
-        console.log('zeige vorher geladene Pokemons')
+        if(newCount < maxCount){
+            document.getElementById('pokedexContainerBtn').innerHTML = `<button onclick="loadMorePokemons()" style="">Mehr laden</button>`;
+        }
+
+        for (let x = 0; x < currentPokemons.length; x++) {
+            currentPokemon = currentPokemons[x];
+            loadArea(currentPokemon['id']);
+            renderPokemon();
+        }
     }
+}
+
+function clearArea() {
+    document.getElementById('pokemonContainer').innerHTML = '';
 }
 
 function searchByNameDe(searchTerm) {
@@ -213,7 +215,7 @@ function searchByNameDe(searchTerm) {
         const pokemonName = pokemon['name'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
         return pokemonName.indexOf(searchTerm) >= 0; // search term
     });
-    console.log(searchResult);
+    return searchResult;
 }
 
 function searchByNameEn(searchTerm) {
@@ -221,6 +223,16 @@ function searchByNameEn(searchTerm) {
     searchResult = allPokemons.filter((pokemon) => {
         const pokemonName = pokemon['name_en'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
         return pokemonName.indexOf(searchTerm) >= 0; // search term
+    });
+    return searchResult;
+}
+
+// NOCH NICHT FERTIG
+function searchByTypeDe(searchTerm) {
+    let searchResult = []
+    searchResult = allPokemons.filter((pokemon) => {
+        const pokemonType = pokemon['name'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
+        return pokemonType.indexOf(searchTerm) >= 0; // search term
     });
     return searchResult;
 }
@@ -238,9 +250,13 @@ function opnLoadingCard() {
 
 function closeLoading() {
     document.getElementById('loading').classList.add('d-none');
-    document.getElementById('main').classList.remove('main-bg');
     document.getElementById('body').style.overflow = '';
     document.getElementById('bigView').classList.remove('card-bg');
+}
+
+function closeLoadingMain() {
+    document.getElementById('main').classList.remove('main-bg');
+    closeLoading();
 }
 
 /* ========== FOOTER ========== */

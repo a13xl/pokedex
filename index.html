@@ -44,9 +44,12 @@
             <span><b>Pokédex</b></span>
             <div>
                 <input id="searchInput" type="search" placeholder="Suchen..." class="navbar-search-type" onkeyup="searchPokemon()" onsearch="searchPokemon()">
-                <!--
-                <button class="navbar-search-type navbar-search-actions" onclick="search()">Suchen</button>
-                -->
+                <select name="Suchart" id="searchType">
+                    <option value="NameDe">Name deutsch</option>
+                    <option value="NameEn">Name english</option>
+                    <option value="TypeDe">Typ deutsch</option>
+                    <option value="TypeEn">Type english</option>
+                </select>
             </div>
             <div id="siteTheme" style="cursor: pointer;"><span onclick="changeTheme('dark')">dark mode</span></div>
         </nav>

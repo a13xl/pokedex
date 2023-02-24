@@ -70,7 +70,7 @@ function getTypeColorIcon(type) {
             return ['linear-gradient(to bottom, #1F0D36,#771CA2,#1F0D36)', '#1F0D36', 'Geist'] //#5c4585
         break;
         case 'dragon':
-            return ['linear-gradient(to bottom, #a96de5,#d1a3ff,#a96de5)', 'Drache'] //#a0841f
+            return ['linear-gradient(to bottom, #a96de5,#d1a3ff,#a96de5)', '#a96de5', 'Drache'] //#a0841f
         break;
     }
 }
@@ -167,7 +167,7 @@ function loadPokemonNav(id) {
 function loadBigCardInfosTemplate(id, height, weight) {
     return `
     <div>
-        <table style="width: 60%">
+        <table style="width: 75%">
             <tr>
                 <td><b>Größe:</b></td>
                 <td style="text-align: right;">${height} m</td>
@@ -180,7 +180,7 @@ function loadBigCardInfosTemplate(id, height, weight) {
         <table style="width: 75%;">
             <tr>
                 <td><b>Gattung:</b></td>
-                <td style="text-align: center;">${allPokemons[id]['genus']}</td>
+                <td style="text-align: right;">${allPokemons[id]['genus']}</td>
             </tr>
         </table>
         <br>
