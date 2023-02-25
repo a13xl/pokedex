@@ -42,13 +42,14 @@
     <div id="main" class="main-bg">
         <nav id="navbar">
             <span><b>Pokédex</b></span>
-            <div>
+            <div class="searchArea">
                 <input id="searchInput" type="search" placeholder="Suchen..." class="navbar-search-type" onkeyup="searchPokemon()" onsearch="searchPokemon()">
-                <select name="Suchart" id="searchType">
+                <select name="Suchart" id="searchType" onchange="searchPokemon()">
                     <option value="NameDe">Name deutsch</option>
                     <option value="NameEn">Name english</option>
                     <option value="TypeDe">Typ deutsch</option>
                     <option value="TypeEn">Type english</option>
+                    <option value="PokemonId">Pokemon ID</option>
                 </select>
             </div>
             <div id="siteTheme" style="cursor: pointer;"><span onclick="changeTheme('dark')">dark mode</span></div>
@@ -63,7 +64,6 @@
         <!-- ========== Footer with impressum and privacy policy ========== -->
         <footer id="footer">
             <span onclick="impressum()">Impressum</span>
-            <span>Datenschutzerklärung</span>
             <a href="https://github.com/a13xl" target="new Tab"><img src="./img/icons/github_white.png" alt="github icon" title="Github"></a>
         </footer>
     </div>

@@ -170,38 +170,64 @@ function searchPokemon() {
     clearArea();
 
     if(searchTerm.length > 0) {
-        document.getElementById('pokedexContainerBtn').innerHTML = '';
-
-        switch (searchType) {
-            case 'NameDe':
-                searchedPokemon = searchByNameDe(searchTerm);
-                break;
-            case 'NameEn':
-                searchedPokemon = searchByNameEn(searchTerm);
-                break;
-            case 'TypeDe':
-                searchedPokemon = searchByTypeDe(searchTerm);
-                break;
-            case 'TypeEn':
-                searchedPokemon = searchByNameEn(searchTerm);
-                break;
-        }
-        
-        for (let x = 0; x < searchedPokemon.length; x++) {
-            currentPokemon = searchedPokemon[x];
-            loadArea(currentPokemon['id']);
-            renderPokemon();
-        }
+        searchTermGtZero(searchType, searchTerm); 
     } else {
-        if(newCount < maxCount){
-            document.getElementById('pokedexContainerBtn').innerHTML = `<button onclick="loadMorePokemons()" style="">Mehr laden</button>`;
-        }
+        searchTermLtZero();
+    }
+}
 
-        for (let x = 0; x < currentPokemons.length; x++) {
-            currentPokemon = currentPokemons[x];
-            loadArea(currentPokemon['id']);
-            renderPokemon();
+function searchTermGtZero(searchType, searchTerm) {
+    document.getElementById('pokedexContainerBtn').innerHTML = '';
+
+        searchTypeSwitch(searchType, searchTerm);
+        
+        if(searchedPokemon.length > 0) {
+            for (let x = 0; x < searchedPokemon.length; x++) {
+                currentPokemon = searchedPokemon[x];
+                loadArea(currentPokemon['id']);
+                renderPokemon();
+            }
+        } else {
+            document.getElementById('pokemonContainer').innerHTML = `
+            <span class="searchError">Es wurde nichts gefunden!<br><br>Nothing found!</span>`;
         }
+}
+
+function searchTermLtZero() {
+    if(newCount < maxCount){
+        document.getElementById('pokedexContainerBtn').innerHTML = `<button onclick="loadMorePokemons()" style="">Mehr laden</button>`;
+    }
+
+    for (let x = 0; x < currentPokemons.length; x++) {
+        currentPokemon = currentPokemons[x];
+        loadArea(currentPokemon['id']);
+        renderPokemon();
+    }
+}
+
+function searchTypeSwitch(searchType, searchTerm) {
+    switch (searchType) {
+        case 'NameDe':
+            searchedPokemon = searchByNameDe(searchTerm);
+            break;
+        case 'NameEn':
+            searchedPokemon = searchByNameEn(searchTerm);
+            break;
+        case 'TypeDe':
+                let searchedPokemon1 = searchByTypeDe(searchTerm, 0);
+                let searchedPokemon2 = searchByTypeDe(searchTerm, 1);
+                searchedPokemon = searchedPokemon1.concat(searchedPokemon2);
+                searchedPokemon = searchedPokemon.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+            break;
+        case 'TypeEn':
+                let searchedPokemonTypeEn1 = searchByTypeEn(searchTerm, 0);
+                let searchedPokemonTypeEn2 = searchByTypeEn(searchTerm, 1);
+                searchedPokemon = searchedPokemonTypeEn1.concat(searchedPokemonTypeEn2);
+                searchedPokemon = searchedPokemon.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+            break;
+        case 'PokemonId':
+            searchedPokemon = searchByID(searchTerm);
+            break;
     }
 }
 
@@ -210,7 +236,8 @@ function clearArea() {
 }
 
 function searchByNameDe(searchTerm) {
-    let searchResult = []
+    let searchResult = [];
+
     searchResult = allPokemons.filter((pokemon) => {
         const pokemonName = pokemon['name'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
         return pokemonName.indexOf(searchTerm) >= 0; // search term
@@ -219,7 +246,8 @@ function searchByNameDe(searchTerm) {
 }
 
 function searchByNameEn(searchTerm) {
-    let searchResult = []
+    let searchResult = [];
+
     searchResult = allPokemons.filter((pokemon) => {
         const pokemonName = pokemon['name_en'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
         return pokemonName.indexOf(searchTerm) >= 0; // search term
@@ -227,12 +255,36 @@ function searchByNameEn(searchTerm) {
     return searchResult;
 }
 
-// NOCH NICHT FERTIG
-function searchByTypeDe(searchTerm) {
-    let searchResult = []
+function searchByTypeDe(searchTerm, nr) {
+    let searchResult = [];
+
     searchResult = allPokemons.filter((pokemon) => {
-        const pokemonType = pokemon['name'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
-        return pokemonType.indexOf(searchTerm) >= 0; // search term
+        if (pokemon['types'][nr]) {
+            const pokemonType = pokemon['types'][nr]['type']['name'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
+            return pokemonType.indexOf(searchTerm) >= 0; // search term
+        }
+    });
+    return searchResult;
+}
+
+function searchByTypeEn(searchTerm, nr) {
+    let searchResult = [];
+
+    searchResult = allPokemons.filter((pokemon) => {
+        if (pokemon['types'][nr]) {
+            const pokemonType = pokemon['types'][nr]['type']['name_en'].toLowerCase(); // Pokemon Name (array allPokemons) to Lower Case
+            return pokemonType.indexOf(searchTerm) >= 0; // search term
+        }
+    });
+    return searchResult;
+}
+
+function searchByID(searchTerm) {
+    let searchResult = [];
+
+    searchResult = allPokemons.filter((pokemon) => {
+        const pokemonID = pokemon['id'].toString(); // Pokemon Name (array allPokemons) to Lower Case
+        return pokemonID.indexOf(searchTerm) >= 0; // search term
     });
     return searchResult;
 }
@@ -267,3 +319,4 @@ function impressum() {
     document.getElementById('big-view-content').innerHTML = impressumTemplate();
     changeThemeImpressum();
 }
+
