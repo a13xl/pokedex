@@ -57,8 +57,20 @@ async function getCurrentPokemonInfo(x) {
     //loadGenus(currentSpecies);
     currentPokemon['genus'] = currentSpecies['genera'][4]['genus'];
     //loadDescription(currentSpecies);
-    currentPokemon['description'] = currentSpecies['flavor_text_entries'][25]['flavor_text'].replace(/\n/gi, "<br>");
+    rightDescriptionLanguage(currentSpecies);
+    //currentPokemon['description'] = currentSpecies['flavor_text_entries'][25]['flavor_text'].replace(/\n/gi, "<br>");
     pokemonType();  
+}
+
+function rightDescriptionLanguage(currentSpecies) {
+    //debugger;
+    let description = currentSpecies['flavor_text_entries'];
+    for (let x = 0; x < description.length; x++) {
+        const element = description[x];
+        if(description[x]['language']['name'] == "de") {
+            currentPokemon['description'] = description[x]['flavor_text'].replace(/\n/gi, "<br>");
+        }
+    }
 }
 
 function loadMorePokemonBtn() {
