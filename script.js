@@ -231,6 +231,12 @@ function searchTypeSwitch(searchType, searchTerm) {
     }
 }
 
+function searchForType(type) {
+    document.getElementById('searchInput').value = type;
+    document.getElementById('searchType').value = 'TypeEn';
+    searchPokemon();
+}
+
 function clearArea() {
     document.getElementById('pokemonContainer').innerHTML = '';
 }

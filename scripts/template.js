@@ -7,15 +7,15 @@ function loadPokedexEelement(pokemonNr) {
                     <span id="pokemon-id-${pokemonNr}" class="pokemon-id"></span>
                 </div>
                 <img id="pokemon-img-${pokemonNr}" class="pokemon-img">
-                <div id="pokemon-type-${pokemonNr}" class="pokemon-type"></div>
+                <div id="pokemon-type-${pokemonNr}" class="pokemon-type" onclick="stopClosing()"></div>
             </div>
         </div>`;
 }
 
 function loadTypeIcon(type, typNr) {
     return `
-        <div id="pokemon-type-icon-${currentPokemon['id']}-${typNr}" class="pokemon-type-icon">
-            <img style="height: 25px;" src="./img/type_icons/${type}.png" alt="${type} icon" onclick="showSameType('${type}')"></img>
+        <div id="pokemon-type-icon-${currentPokemon['id']}-${typNr}" class="pokemon-type-icon" onclick="searchForType('${type}')">
+            <img style="height: 25px;" src="./img/type_icons/${type}.png" alt="${type} icon"></img>
         </div>`;
 }
 
