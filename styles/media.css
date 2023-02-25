@@ -1,4 +1,4 @@
-@media (max-height: 700px) {
+@media (max-height: 700px) or (max-width: 500px) {
     #navbar {
         justify-content: center;
     }
@@ -11,5 +11,66 @@
         position: fixed;
         top: 10px;
         right: 10px;
+    }
+
+    #pokedexContainer {
+        margin-top: 50px;
+    }
+
+    #pokemonContainer {
+        gap: 10px;
+    }
+
+    .pokedex-type {
+        height: 265px;
+    }
+
+    .searchError {
+        font-size: 45px;
+    }
+
+    .bigView-window {
+        width: 100%;
+    }
+
+    .bigView-close {
+        height: 45px;
+        width: 45px;
+        position: fixed;
+        top: 5px;
+        right: 5px;
+        z-index: 99;
+    }
+
+    .bigView-close img {
+        display: unset;
+    }
+
+    .evolutionPics {
+        height: 6rem;
+    }
+}
+
+@media (max-width: 300px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    #searchInput {
+        width: 135px;
+        font-size: 14px;
+    }
+
+    .searchArea select{
+        font-size: 14px;
+    }
+
+    .pokemon-info-nav {
+        font-size: 14px;
+        overflow-x: scroll;
+    }
+
+    .pokemon-info-nav td {
+        padding: 2px;
     }
 }

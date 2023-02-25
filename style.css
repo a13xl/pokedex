@@ -265,7 +265,8 @@ footer img {
 
 .bigView-close {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
+    align-items: center;
 }
 
 .bigView-close img {
@@ -332,6 +333,12 @@ footer img {
     margin-top: -48px;
 }
 
+.tblNav {
+    width: 100%;
+    margin-left: 2%;
+    margin-right: 2%
+}
+
 #pokemon-info-main {
     height: 55.4%;
     border-radius: 20px;
@@ -375,11 +382,23 @@ footer img {
     margin: 0;
 }
 
+.tblStates {
+    width: 100%;
+}
+
 .pokemon-evolution-special {
     width: 100%;
     margin-top: -20px;
     display: flex;
     justify-content: space-between;
+}
+
+.evolutionArrow {
+    height: 3rem;
+}
+
+.evolutionPics {
+    height: 7rem;
 }
 
 #pokemon-moves {

@@ -152,7 +152,7 @@ function loadBigCardTypesTemplate(id, i, color) {
 function loadPokemonNav(id) {
     return `
         <nav class="pokemon-info-nav">
-            <table style="width: 100%; margin-left: 2%; margin-right: 2%">
+            <table class="tblNav">
                 <tr>
                     <td id="info-headline-about" onclick="loadBigCardInfos(${id})"><b>Infos</b></td>
                     <td id="info-headline-basisStats" onclick="loadBigCardState(${id})"><b>Basiswerte</b></td>
@@ -191,7 +191,7 @@ function loadBigCardInfosTemplate(id, height, weight) {
 
 function loadBigCardStateTemplate(stats) {
     return `
-        <table style="width: 100%;">
+        <table class="tblStates">
             <tr>
                 <td>HP</td>
                 <td style="text-align: center;"><b>${stats[0]['base_stat']}</b></td>
@@ -229,12 +229,12 @@ function loadBigCardStateTemplate(stats) {
 function createEvolutionsTemplate(pokemon1, pokemon2, trigger) {
     return `
     <div style="width: 100%; display: flex; justify-content: space-between;">
-        <div><img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem"></div>
+        <div><img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" class="evolutionPics"></div>
         <div style="display: flex; flex-direction: column; justify-content: center">
             ${trigger}
-            <img src="../img/icons/arrow-right.png"></img>
+            <img src="../img/icons/arrow-right.png" class="evolutionArrow" class="evolutionArrow"></img>
         </div>
-        <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" style="height: 7rem"></div>
+        <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" class="evolutionPics"></div>
     </div>`;
 }
 
@@ -242,7 +242,7 @@ function createBasisSpecialTemplate(pokemon1) {
     return `
     <div class="pokemon-evolution-special">
         <div style="display: flex; align-items: center;">
-            <img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" style="height: 7rem">
+            <img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" class="evolutionPics">
         </div>
         <div id="evolution1Container"></div>
     </div>`;
@@ -253,10 +253,10 @@ function createEvolution1SpecialTemplate(pokemon2, trigger) {
     <div style="display: flex; gap: 48px">
         <div style="display: flex; flex-direction: column; justify-content: center">
             ${trigger}
-            <img src="../img/icons/arrow-right.png"></img>
+            <img src="../img/icons/arrow-right.png" class="evolutionArrow"></img>
         </div>
         <div>
-            <img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" style="height: 7rem">
+            <img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" class="evolutionPics">
         </div>
     </div>`;
 }
