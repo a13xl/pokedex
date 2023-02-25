@@ -49,13 +49,14 @@
         height: 45px;
         width: 45px;
         position: fixed;
-        top: 5px;
-        right: 5px;
+        top: -5px;
+        right: 15px;
+        display: unset;
         z-index: 99;
     }
 
-    .bigView-close img {
-        display: unset;
+    .bigView-back {
+        display: none;
     }
 
     .evolutionPics {
