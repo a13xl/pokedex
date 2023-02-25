@@ -52,7 +52,7 @@ body {
     border-radius: 10px 0 0 10px;
     border-right: 2px solid #8d8b8b;
     background-color: white !important;
-    background: url('../img/icons/search.png') no-repeat scroll 7px 7px;
+    background: url('./img/icons/search.png') no-repeat scroll 7px 7px;
     padding-left: 30px;
     font-size: 18px;
 }
@@ -92,7 +92,7 @@ body {
 
 /* ========== POKEDEX STARTPAGE ========== */
 #main {
-    background-image: url(../img/backgrounds/background.png);
+    background-image: url('./img/backgrounds/background.png');
     background-attachment: fixed;
     z-index: 1;
 }
@@ -157,7 +157,7 @@ body {
     cursor: pointer;
 }
 
-div:has( > .pokemon-name) {
+.pokemonCardHeadline {
     height: 45px;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.3);

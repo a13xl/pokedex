@@ -2,7 +2,7 @@ function loadPokedexEelement(pokemonNr) {
     return `
         <div id="pokedex-card-bg-${pokemonNr}" class="pokedex-card-bg" onclick="showPokemonBig(${pokemonNr})">
             <div id="pokedex-type-${pokemonNr}" class="pokedex-type">
-                <div>
+                <div class="pokemonCardHeadline">
                     <span id="pokemon-name-${pokemonNr}" class="pokemon-name"></span>
                     <span id="pokemon-id-${pokemonNr}" class="pokemon-id"></span>
                 </div>
@@ -232,7 +232,7 @@ function createEvolutionsTemplate(pokemon1, pokemon2, trigger) {
         <div><img src="${pokemon1[0]['sprites']['other']['home']['front_default']}" alt="${pokemon1[0]['name_en']} Picture" title="${pokemon1[0]['name']}" class="evolutionPics"></div>
         <div style="display: flex; flex-direction: column; justify-content: center">
             ${trigger}
-            <img src="../img/icons/arrow-right.png" class="evolutionArrow" class="evolutionArrow"></img>
+            <img src="./img/icons/arrow-right.png" class="evolutionArrow" class="evolutionArrow"></img>
         </div>
         <div><img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" class="evolutionPics"></div>
     </div>`;
@@ -253,7 +253,7 @@ function createEvolution1SpecialTemplate(pokemon2, trigger) {
     <div style="display: flex; gap: 48px">
         <div style="display: flex; flex-direction: column; justify-content: center">
             ${trigger}
-            <img src="../img/icons/arrow-right.png" class="evolutionArrow"></img>
+            <img src="./img/icons/arrow-right.png" class="evolutionArrow"></img>
         </div>
         <div>
             <img src="${pokemon2[0]['sprites']['other']['home']['front_default']}" alt="${pokemon2[0]['name_en']}" title="${pokemon2[0]['name']}" class="evolutionPics">

@@ -150,7 +150,7 @@ function getEvolutionTrigger(value2, x) {
     } else if(value2[x]['item']) {
         let stonename = getStoneName(value2[x]['item']);
         trigger = `
-        <img src="../img/stones/${value2[x]['item']}.png" alt="${value2[x]['item']}" title="${stonename}" style="height: 2rem; object-fit: contain"></img>`;
+        <img src="./img/stones/${value2[x]['item']}.png" alt="${value2[x]['item']}" title="${stonename}" style="height: 2rem; object-fit: contain"></img>`;
     }
     return trigger;
 }
